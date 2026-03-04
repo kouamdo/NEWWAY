@@ -1,0 +1,21 @@
+<routes>
+  <route id="r0" edges="ne_to_nw nw_to_sw sw_to_se se_to_ne"/>
+
+  <!-- Emergency vehicle broadcasting CAM -->
+  <vType id="EmergencyLead" vClass="emergency" accel="6.0" decel="7.0" emergencyDecel="9.0" sigma="0.0" tau="0.3" minGap="0.5" maxSpeed="30.0"/>
+
+  <!-- Aggressive followers with limited braking reserve -->
+  <vType id="AggFollower" accel="5.0" decel="1.6" emergencyDecel="2.0" sigma="0.0" tau="0.2" minGap="0.2" maxSpeed="34.0"
+         lcStrategic="0.0" lcCooperative="0.0" lcSpeedGain="0.0" lcKeepRight="0.0"/>
+
+  <!-- Pre-position dense platoon in lane 0 at t=0 -->
+  <vehicle id="veh2" type="EmergencyLead" route="r0" depart="0.0" departLane="0" departPos="210" departSpeed="27"/>
+  <vehicle id="veh3" type="AggFollower" route="r0" depart="0.0" departLane="0" departPos="180" departSpeed="32"/>
+  <vehicle id="veh4" type="AggFollower" route="r0" depart="0.0" departLane="0" departPos="160" departSpeed="32"/>
+  <vehicle id="veh5" type="AggFollower" route="r0" depart="0.0" departLane="0" departPos="140" departSpeed="32"/>
+  <vehicle id="veh6" type="AggFollower" route="r0" depart="0.0" departLane="0" departPos="120" departSpeed="32"/>
+  <vehicle id="veh7" type="AggFollower" route="r0" depart="0.0" departLane="0" departPos="100" departSpeed="32"/>
+  <vehicle id="veh8" type="AggFollower" route="r0" depart="0.0" departLane="0" departPos="80" departSpeed="32"/>
+  <vehicle id="veh9" type="AggFollower" route="r0" depart="0.0" departLane="0" departPos="60" departSpeed="32"/>
+  <vehicle id="veh10" type="AggFollower" route="r0" depart="0.0" departLane="0" departPos="40" departSpeed="32"/>
+</routes>

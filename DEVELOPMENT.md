@@ -9,8 +9,8 @@ Use a disposable clone/workdir for setup.
 Clone this repository:
 
 ```bash
-git clone https://github.com/DriveX-devs/VaN3Twin.git
-cd VaN3Twin
+git clone https://github.com/DriveX-devs/NEWWAY.git
+cd NEWWAY
 ```
 
 Run bootstrap:

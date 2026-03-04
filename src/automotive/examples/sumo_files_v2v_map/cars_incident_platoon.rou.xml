@@ -1,0 +1,28 @@
+<routes>
+  <route id="r_main" edges="nw_to_sw sw_to_se se_to_ne ne_to_nw"/>
+  <route id="r_other" edges="ne_to_se se_to_sw sw_to_nw nw_to_ne"/>
+
+  <!-- Emergency source vehicle (sends CAM with stationType_specialVehicle) -->
+  <vType id="EmergencyLead" vClass="emergency" accel="5.0" decel="7.0" emergencyDecel="9.0" sigma="0.0" tau="0.4" minGap="0.7" maxSpeed="24.0"/>
+
+  <!-- Followers with weak braking reserve to amplify late-reaction risk -->
+  <vType id="FollowerAgg" accel="4.0" decel="1.4" emergencyDecel="1.8" sigma="0.0" tau="0.25" minGap="0.2" maxSpeed="30.0"
+         lcStrategic="0.0" lcCooperative="0.0" lcSpeedGain="0.0" lcKeepRight="0.0"/>
+
+  <!-- Background traffic -->
+  <vType id="Bg" accel="3.0" decel="5.0" emergencyDecel="7.0" sigma="0.2" tau="1.0" minGap="1.5" maxSpeed="16.0"/>
+
+  <!-- Platoon on lane 0; all depart after t>0 so TraCI departedIDList catches them -->
+  <vehicle id="veh2" type="EmergencyLead" route="r_main" depart="0.2" departLane="0" departPos="100" departSpeed="22"/>
+  <vehicle id="veh3" type="FollowerAgg" route="r_main" depart="0.2" departLane="0" departPos="82"/>
+  <vehicle id="veh4" type="FollowerAgg" route="r_main" depart="0.2" departLane="0" departPos="66"/>
+  <vehicle id="veh5" type="FollowerAgg" route="r_main" depart="0.2" departLane="0" departPos="50"/>
+  <vehicle id="veh6" type="FollowerAgg" route="r_main" depart="0.2" departLane="0" departPos="34"/>
+  <vehicle id="veh7" type="FollowerAgg" route="r_main" depart="0.2" departLane="0" departPos="18"/>
+  <vehicle id="veh8" type="FollowerAgg" route="r_main" depart="0.2" departLane="0" departPos="4"/>
+  <vehicle id="veh9" type="FollowerAgg" route="r_main" depart="0.6" departLane="0" departPos="0"/>
+
+  <vehicle id="veh10" type="Bg" route="r_other" depart="0.8" departLane="0" departPos="0" departSpeed="12"/>
+  <vehicle id="veh11" type="Bg" route="r_other" depart="1.6" departLane="1" departPos="0" departSpeed="12"/>
+  <vehicle id="veh12" type="Bg" route="r_other" depart="2.4" departLane="0" departPos="0" departSpeed="12"/>
+</routes>

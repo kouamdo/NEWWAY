@@ -1,0 +1,23 @@
+<routes>
+  <route id="r_main" edges="nw_to_sw sw_to_se se_to_ne ne_to_nw"/>
+
+  <!-- Emergency lead vehicle which will be forced to stop (incident source) -->
+  <vType id="EmergencyLead" vClass="emergency" accel="4.0" decel="7.0" emergencyDecel="9.0" sigma="0.0" tau="0.6" minGap="1.0" maxSpeed="24.0"/>
+
+  <!-- Dense platoon followers on lane 0 -->
+  <vType id="FollowerFlow" accel="3.5" decel="4.5" emergencyDecel="6.5" sigma="0.0" tau="0.7" minGap="0.9" maxSpeed="22.0"
+         lcStrategic="0.0" lcCooperative="0.0" lcSpeedGain="0.0" lcKeepRight="0.0"/>
+
+  <!-- All vehicles start in the same lane (lane 0): visible flow behind truck -->
+  <vehicle id="veh2"  type="EmergencyLead" route="r_main" depart="0.2" departLane="0" departPos="120" departSpeed="21"/>
+  <vehicle id="veh3"  type="FollowerFlow" route="r_main" depart="0.2" departLane="0" departPos="108" departSpeed="20"/>
+  <vehicle id="veh4"  type="FollowerFlow" route="r_main" depart="0.2" departLane="0" departPos="96"  departSpeed="20"/>
+  <vehicle id="veh5"  type="FollowerFlow" route="r_main" depart="0.2" departLane="0" departPos="84"  departSpeed="20"/>
+  <vehicle id="veh6"  type="FollowerFlow" route="r_main" depart="0.2" departLane="0" departPos="72"  departSpeed="20"/>
+  <vehicle id="veh7"  type="FollowerFlow" route="r_main" depart="0.2" departLane="0" departPos="60"  departSpeed="20"/>
+  <vehicle id="veh8"  type="FollowerFlow" route="r_main" depart="0.2" departLane="0" departPos="48"  departSpeed="20"/>
+  <vehicle id="veh9"  type="FollowerFlow" route="r_main" depart="0.2" departLane="0" departPos="36"  departSpeed="20"/>
+  <vehicle id="veh10" type="FollowerFlow" route="r_main" depart="0.2" departLane="0" departPos="24"  departSpeed="20"/>
+  <vehicle id="veh11" type="FollowerFlow" route="r_main" depart="0.2" departLane="0" departPos="12"  departSpeed="20"/>
+  <vehicle id="veh12" type="FollowerFlow" route="r_main" depart="0.2" departLane="0" departPos="0"   departSpeed="20"/>
+</routes>

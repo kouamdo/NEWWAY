@@ -43,3 +43,49 @@
 
 Текущая конфигурация SUMO не привела к критическим событиям по surrogate safety (`risky_gap_events=0`, `risky_ttc_events=0`), поэтому для демонстрации «loss -> авария» нужен более конфликтный дорожный кейс. Однако уже на текущем наборе данных влияние потерь сообщений на поведение (реакции и их тайминг) подтверждено количественно.
 
+### Дополнительный подтверждающий эксперимент (baseline vs lossy PHY)
+
+В конфликтном platoon-кейсе (`analysis/scenario_runs/2026-02-21/eva-platoon-collision-proof3-131815`) выполнено прямое сравнение:
+- `baseline`: `rx-drop-prob-phy-cam=0.0`;
+- `lossy`: `rx-drop-prob-phy-cam=0.95`.
+
+Получено:
+- Average PRR: `0.901954 -> 0.624577`;
+- CAM PHY drops (суммарно по узлам): `0 -> 10618`;
+- суммарные control actions: `590 -> 32`;
+- min TTC: `3.196 s -> 2.897 s`.
+
+При пороге опасного сближения `TTC < 3.1 s`:
+- baseline: `risky_ttc_events = 0`,
+- lossy: `risky_ttc_events = 2`
+(`analysis/scenario_runs/2026-02-21/eva-platoon-collision-proof3-131815/*/artifacts/collision_risk_ttc_3p1/collision_risk_summary.csv`).
+
+Итог: в данном кейсе подтвержден переход в **опасное состояние** (safety-threshold crossing) при PHY-потерях CAM. Физические столкновения по `collision-output` не зафиксированы (`0/0`), поэтому на текущем этапе доказательство относится к уровню surrogate safety, а не к факту удара.
+
+### Валидированный причинный сценарий «loss -> collision» (для демонстрации в ВКР)
+
+Для закрытия требования по физическому ДТП реализован и зафиксирован отдельный воспроизводимый пакет:
+- `valid_scenario/run.sh`
+- `valid_scenario/README.md`
+
+Сценарная постановка:
+- в полосе инцидента движутся `veh3`, `veh4`, `veh5` за `veh2`;
+- `veh2` принудительно останавливается в момент `t=6 s`;
+- `veh4` получает таргетированные PHY-потери (`CAM/CPM=1.0`), strict mode: `drop_decision_no_action`;
+- `veh3` и `veh5` не имеют таргетированных потерь и выполняют lane-change;
+- `collision.action=warn` и `collision.stoptime=1000` удерживают столкнувшиеся авто на дороге.
+
+На валидационном прогоне (`analysis/scenario_runs/2026-03-04/verify-threeflow-force-lc`):
+- `veh3` впервые перестраивается в `t=7.14358 s` (`eva-veh3-CTRL.csv`);
+- collision `veh4 -> veh2` фиксируется в `t=7.90 s` (`artifacts/eva-collision.xml`);
+- `veh5` впервые перестраивается в `t=10.1341 s` (`eva-veh5-CTRL.csv`);
+- causal report (`artifacts/collision_causality/collision_causality.csv`) для collider `veh4`:
+  `causal_evidence = strong_no_action_only`, `missing_decision_events = 0`.
+
+Таким образом, в этом кейсе получено не только surrogate safety, но и **факт физического столкновения** с пакетным доказательством причинной цепочки `DROP_PHY(pkt_uid) -> drop_decision_no_action -> COLLISION`.
+
+Для визуального и количественного анализа «под капотом» автоматически строятся дипломные графики:
+- `artifacts/valid_scenario_story/speed_lane_timeseries.png`;
+- `artifacts/valid_scenario_story/gap_ttc_timeseries.png`;
+- `artifacts/valid_scenario_story/ns3_events_per_second.png`;
+- `artifacts/valid_scenario_story/event_chain_timeline.png` + `event_chain.csv`.

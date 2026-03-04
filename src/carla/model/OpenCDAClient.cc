@@ -29,6 +29,15 @@
 
 namespace ns3
 {
+  namespace
+  {
+    std::string
+    MakeTmpLogPath (const std::string& prefix, uint32_t port)
+    {
+      return "/tmp/" + prefix + "_" + std::to_string (port) + "_" + std::to_string (geteuid ()) + ".txt";
+    }
+  } // namespace
+
   NS_LOG_COMPONENT_DEFINE("OpenCDAClient");
 
   TypeId
@@ -232,6 +241,10 @@ namespace ns3
                   if (!m_carla_gui || forceOffscreen) {
                       carla_command += " -RenderOffScreen";
                   }
+                  // Allow running CARLA from root-owned automation environments.
+                  if (geteuid() == 0) {
+                      carla_command += " -allow-root";
+                  }
                   if(m_carla_gpu != 0 && (!m_carla_gui || forceOffscreen)) {
                       carla_command += " -graphicsadapter=" + std::to_string(m_carla_gpu);
                   }
@@ -240,10 +253,11 @@ namespace ns3
                   }
                   setpgid(0, 0); // Create a new process group
 
-                  std::ifstream file("/tmp/carla_output.txt");
+                  std::string carlaLogPath = MakeTmpLogPath ("carla_output", m_carla_port);
+                  std::ifstream file(carlaLogPath.c_str());
                   if (file.good()) {
                       file.close();
-                      remove("/tmp/carla_output.txt");
+                      remove(carlaLogPath.c_str());
                   }
 
                   if(m_carla_host != "localhost" ) {
@@ -252,7 +266,7 @@ namespace ns3
 
 
                       // Open a temporary file for CARLA output
-                      int fd = open("/tmp/carla_output.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                      int fd = open(carlaLogPath.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
                       if (fd < 0) {
                           perror("Opening temp file for CARLA output failed");
                           exit(1);
@@ -278,7 +292,7 @@ namespace ns3
                       std::cout <<"Executing: " << (carla_command).c_str() << std::endl;
 
                       // Open a temporary file for CARLA output
-                      int fd = open("/tmp/carla_output.txt", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                      int fd = open(carlaLogPath.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
                       if (fd < 0) {
                           perror("Opening temp file for CARLA output failed");
                           exit(1);
@@ -340,7 +354,7 @@ namespace ns3
                   }
                   std::cout << "Executing: " << (opencda_command).c_str() << std::endl;
                   // Open a temporary file for CARLA output
-                  std::string file_name = "/tmp/opencda_output_" + std::to_string(m_opencda_port) + ".txt";
+                  std::string file_name = MakeTmpLogPath ("opencda_output", m_opencda_port);
                   int fd = open(file_name.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0644);
                   if (fd < 0) {
                       perror("Opening temp file for OpenCDA output failed");
@@ -393,8 +407,8 @@ namespace ns3
           return lastLogLine;
       };
       while (!server_ready) {
-          // read /tmp/opencda_output.txt to see OpenCDA logs and check if there's a "Server ready" message
-          std::string file_name = "/tmp/opencda_output_" + std::to_string(m_opencda_port) + ".txt";
+          // read OpenCDA output log and check if there's a "Server ready" message
+          std::string file_name = MakeTmpLogPath ("opencda_output", m_opencda_port);
           std::ifstream file(file_name.c_str());
             if (file.good()) {
                 std::string line;
@@ -431,7 +445,8 @@ namespace ns3
               }
               if (carlaExited || carlaMissing) {
                   std::string carlaLog = "(no CARLA output captured)";
-                  std::ifstream carlaFile("/tmp/carla_output.txt");
+                  std::string carlaLogPath = MakeTmpLogPath ("carla_output", m_carla_port);
+                  std::ifstream carlaFile(carlaLogPath.c_str());
                   if (carlaFile.good()) {
                       std::string carlaLine;
                       while (std::getline(carlaFile, carlaLine)) {
@@ -442,7 +457,7 @@ namespace ns3
                       carlaFile.close();
                   }
                   std::string fatalMessage = "CARLA process exited before OpenCDA reported 'Server ready'. "
-                                             "Check /tmp/carla_output.txt. Last log line: " + carlaLog;
+                                             "Check " + carlaLogPath + ". Last log line: " + carlaLog;
                   NS_FATAL_ERROR(fatalMessage.c_str());
               }
           }
@@ -761,7 +776,7 @@ namespace ns3
           }
           Simulator::Stop ();
 
-          std::string file_name = "/tmp/opencda_output_" + std::to_string(m_opencda_port) + ".txt";
+          std::string file_name = MakeTmpLogPath ("opencda_output", m_opencda_port);
           std::cout << "OpenCDA simulation finished unexpectedly, check " << file_name.c_str() <<" to see OpenCDA logs" << std::endl;
         }
   }

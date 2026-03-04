@@ -24,9 +24,11 @@
 #include "ns3/network-module.h"
 #include "ns3/gn-utils.h"
 #include <cmath>
+#include <vector>
 #include "ns3/ipv4-header.h"
 #include "ns3/DCC.h"
 #include "ns3/btpHeader.h"
+#include "ns3/CollectivePerceptionMessage.h"
 #define SN_MAX 65536
 
 #define IEEE80211_DATA_PKT_HDR_LEN 24
@@ -784,6 +786,7 @@ namespace ns3 {
     Address from;
     GNBasicHeader basicHeader;
     GNCommonHeader commonHeader;
+    RxPhyDropInfo dropInfo;
 
     if(m_stationtype==StationType_roadSideUnit && m_RSU_epv_set==false)
     {
@@ -791,9 +794,14 @@ namespace ns3 {
     }
 
     dataIndication.data = socket->RecvFrom (from);
+    if (dataIndication.data != nullptr)
+      {
+        dropInfo.packetUid = dataIndication.data->GetUid ();
+      }
 
     uint16_t btpDestPort = 0;
     bool hasBtpDestPort = false;
+    Ptr<Packet> inspectAppPayload = nullptr;
     if ((m_rx_drop_prob_phy_cam > 0.0 || m_rx_drop_prob_phy_cpm > 0.0) &&
         dataIndication.data != nullptr &&
         dataIndication.data->GetSize () >= 12)
@@ -830,6 +838,38 @@ namespace ns3 {
             inspectPkt->RemoveHeader (inspectBtp, 4);
             btpDestPort = inspectBtp.GetDestinationPort ();
             hasBtpDestPort = true;
+            inspectAppPayload = inspectPkt->Copy ();
+          }
+      }
+    dropInfo.btpDestPort = btpDestPort;
+    if (hasBtpDestPort && inspectAppPayload != nullptr && inspectAppPayload->GetSize () >= 2)
+      {
+        std::vector<uint8_t> payload (inspectAppPayload->GetSize ());
+        inspectAppPayload->CopyData (payload.data (), payload.size ());
+        dropInfo.messageId = payload[1];
+        std::string packetContent (reinterpret_cast<const char*> (payload.data ()),
+                                   static_cast<int> (payload.size ()));
+
+        if (btpDestPort == CAM_PORT && dropInfo.messageId == FIX_CAMID)
+          {
+            auto decoded_cam = asn1cpp::uper::decodeASN(packetContent, CAM);
+            if (bool (decoded_cam))
+              {
+                dropInfo.txStationId = asn1cpp::getField(decoded_cam->header.stationId,long);
+                dropInfo.msgSeq = asn1cpp::getField(decoded_cam->cam.generationDeltaTime,long);
+                dropInfo.hasDecodedIds = true;
+              }
+          }
+        else if (btpDestPort == CPM_PORT)
+          {
+            auto decoded_cpm = asn1cpp::uper::decodeASN(packetContent, CollectivePerceptionMessage);
+            if (bool (decoded_cpm))
+              {
+                dropInfo.txStationId = asn1cpp::getField(decoded_cpm->header.stationId,long);
+                dropInfo.msgSeq = asn1cpp::getField(decoded_cpm->payload.managementContainer.referenceTime,long);
+                dropInfo.hasDecodedIds = true;
+                dropInfo.messageId = static_cast<uint8_t> (asn1cpp::getField(decoded_cpm->header.messageId,long));
+              }
           }
       }
 
@@ -863,7 +903,7 @@ namespace ns3 {
           }
         if (m_rx_phy_drop_callback != nullptr)
           {
-            m_rx_phy_drop_callback (btpDestPort);
+            m_rx_phy_drop_callback (dropInfo);
           }
         return;
       }

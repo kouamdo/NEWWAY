@@ -274,10 +274,13 @@ trap cleanup EXIT
 sleep 3
 
 echo "Running ns-3 CARLA+Sionna scenario..."
-"$CARLA_BINARY" \
-  "--simTime=$SIM_TIME" \
-  "--opencda-config=$OPENCDA_CONFIG" \
-  "--sionna=true" \
-  "--sionna-server-ip=127.0.0.1" \
-  "--sionna-local-machine=true" \
-  "--sionna-verbose=true"
+(
+  cd "$NS3_DIR"
+  "$CARLA_BINARY" \
+    "--simTime=$SIM_TIME" \
+    "--opencda-config=$OPENCDA_CONFIG" \
+    "--sionna=true" \
+    "--sionna-server-ip=127.0.0.1" \
+    "--sionna-local-machine=true" \
+    "--sionna-verbose=true"
+)

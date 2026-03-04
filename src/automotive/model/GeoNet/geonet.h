@@ -153,7 +153,16 @@ namespace ns3
        */
       void disablePRRsupervisorForBeacons() {m_PRRsupervisor_beacons=false;}
       void enablePRRsupervisorForBeacons() {m_PRRsupervisor_beacons=true;}
-      void setRxPhyDropCallback(std::function<void(uint16_t)> cb) { m_rx_phy_drop_callback = cb; }
+      struct RxPhyDropInfo
+      {
+        uint64_t packetUid = 0;
+        uint16_t btpDestPort = 0;
+        long txStationId = -1;
+        long msgSeq = -1;
+        uint8_t messageId = 0;
+        bool hasDecodedIds = false;
+      };
+      void setRxPhyDropCallback(std::function<void(const RxPhyDropInfo&)> cb) { m_rx_phy_drop_callback = cb; }
       uint64_t GetCamDroppedPhy () const { return m_cam_dropped_phy; }
       uint64_t GetCpmDroppedPhy () const { return m_cpm_dropped_phy; }
       uint64_t GetOtherDroppedPhy () const { return m_other_dropped_phy; }
@@ -259,7 +268,7 @@ namespace ns3
       double m_rx_drop_prob_phy_cam = 0.0;
       double m_rx_drop_prob_phy_cpm = 0.0;
       Ptr<UniformRandomVariable> m_rx_phy_drop_rv = nullptr;
-      std::function<void(uint16_t)> m_rx_phy_drop_callback = nullptr;
+      std::function<void(const RxPhyDropInfo&)> m_rx_phy_drop_callback = nullptr;
       uint64_t m_cam_dropped_phy = 0;
       uint64_t m_cpm_dropped_phy = 0;
       uint64_t m_other_dropped_phy = 0;

@@ -19,6 +19,7 @@ scenarios/nr-v2x-west-to-east-highway/run.sh
 scenarios/v2v-cam-exchange-sionna-nrv2x/run.sh
 scenarios/v2v-coexistence-80211p-nrv2x/run.sh
 scenarios/v2v-emergencyVehicleAlert-nrv2x/run.sh
+valid_scenario/run.sh
 ```
 
 Общие переменные окружения:
@@ -53,10 +54,18 @@ scenarios/v2v-emergencyVehicleAlert-nrv2x/run.sh
 Для сценария `v2v-emergencyVehicleAlert-nrv2x`:
 - есть `run_loss_sweep.sh` для baseline/lossy sweep по `--rx-drop-prob-cam`
 - автоматически считается safety-прокси из SUMO netstate (`min gap`, `min TTC`, risky events)
+- автоматически строится ID-aware timeline `DROP_PHY -> DECISION` по `pkt_uid`
+  (`artifacts/drop_decision_timeline/*.csv|*.png`, отключение: `EVENT_TIMELINE=0`)
 - доступен incident-mode (`--incident-enable=1`) для кейса "сломавшееся авто + объезд"
 - есть `run_baseline_vs_lossy_visual.sh` для наглядного сравнения baseline/lossy на общей тайм-линии
 - есть `run_rssi_safety_sweep.sh` для исследования зависимости RSSI/PRR от `txPower` и связи с safety-метриками
 - есть `run_sionna_incident_sweep.sh` для terrain-aware incident sweep (Sionna vs non-Sionna)
+
+Отдельный зафиксированный дипломный кейс:
+- `valid_scenario/run.sh` — единый воспроизводимый запуск
+  (`veh3` перестраивается, `veh4` с потерями сталкивается с `veh2`, `veh5` перестраивается позже)
+- автоматически строятся story-графики SUMO+ns-3 в
+  `artifacts/valid_scenario_story/` (скорости/полосы, gap/TTC, ns-3 события, event-chain)
 
 ## Где результаты
 
@@ -68,3 +77,5 @@ scenarios/v2v-emergencyVehicleAlert-nrv2x/run.sh
 
 - Готовый список практических сценариев/модификаций для доказательства влияния потерь на поведение:
   `scenarios/RESEARCH_SCENARIOS.md`
+- Полный аудит логов по всем прогонам:
+  `./.venv/bin/python analysis/scenario_runs/analyze_all_logs.py --root analysis/scenario_runs --out-dir analysis/scenario_runs`

@@ -43,6 +43,7 @@
 
 #include <unistd.h>
 #include <algorithm>
+#include <cmath>
 #include <functional>
 #include <iostream>
 #include <memory>
@@ -122,12 +123,40 @@ main (int argc, char *argv[])
   double rx_drop_prob_cpm = 0.0;
   double rx_drop_prob_phy_cam = 0.0;
   double rx_drop_prob_phy_cpm = 0.0;
+  bool drop_triggered_reaction_enable = false;
+  bool target_loss_profile_enable = false;
+  std::string target_loss_vehicle_id = "veh9";
+  double target_loss_rx_drop_prob_cam = 1.0;
+  double target_loss_rx_drop_prob_cpm = 0.0;
+  double target_loss_rx_drop_prob_phy_cam = 1.0;
+  double target_loss_rx_drop_prob_phy_cpm = 0.0;
+  double cam_reaction_distance_m = 75.0;
+  double cam_reaction_heading_deg = 45.0;
+  int cam_reaction_target_lane = 0;
+  double cam_reaction_speed_factor_target_lane = 0.5;
+  double cam_reaction_speed_factor_other_lane = 1.5;
+  double cam_reaction_action_duration_s = 3.0;
+  double cpm_reaction_distance_m = 60.0;
+  double cpm_reaction_ttc_s = 3.0;
+  double reaction_action_cooldown_s = 0.5;
+  bool reaction_force_lane_change_enable = false;
+  bool crash_mode_enable = false;
+  std::string crash_mode_vehicle_id = "veh9";
+  uint32_t crash_mode_no_action_threshold = 5;
+  double crash_mode_force_speed_mps = 32.0;
+  double crash_mode_duration_s = 4.0;
+  double crash_mode_min_time_s = 0.0;
   bool incident_enable = false;
   std::string incident_vehicle_id = "veh2";
   double incident_time_s = 12.0;
   double incident_stop_duration_s = 15.0;
   double incident_recover_max_speed_mps = -1.0;
   uint32_t incident_retry_max = 20;
+  bool incident_setstop_enable = true;
+  std::string sumo_collision_action = "";
+  std::string sumo_collision_output = "";
+  bool sumo_collision_check_junctions = true;
+  double sumo_collision_stoptime_s = -1.0;
 
 
   // Simulation parameters.
@@ -188,6 +217,75 @@ main (int argc, char *argv[])
   cmd.AddValue ("rx-drop-prob-phy-cpm",
                 "PHY/MAC-level probability to drop received CPM packets before upper layers",
                 rx_drop_prob_phy_cpm);
+  cmd.AddValue ("drop-triggered-reaction-enable",
+                "If true, dropped CAM/CPM may still trigger evasive control; if false, drop implies no_action",
+                drop_triggered_reaction_enable);
+  cmd.AddValue ("target-loss-profile-enable",
+                "Enable per-vehicle drop profile override (single impaired receiver)",
+                target_loss_profile_enable);
+  cmd.AddValue ("target-loss-vehicle-id",
+                "Vehicle id that should receive the per-vehicle drop profile (e.g., veh9)",
+                target_loss_vehicle_id);
+  cmd.AddValue ("target-loss-rx-drop-prob-cam",
+                "Per-vehicle app-level CAM drop probability override",
+                target_loss_rx_drop_prob_cam);
+  cmd.AddValue ("target-loss-rx-drop-prob-cpm",
+                "Per-vehicle app-level CPM drop probability override",
+                target_loss_rx_drop_prob_cpm);
+  cmd.AddValue ("target-loss-rx-drop-prob-phy-cam",
+                "Per-vehicle PHY-level CAM drop probability override",
+                target_loss_rx_drop_prob_phy_cam);
+  cmd.AddValue ("target-loss-rx-drop-prob-phy-cpm",
+                "Per-vehicle PHY-level CPM drop probability override",
+                target_loss_rx_drop_prob_phy_cpm);
+  cmd.AddValue ("cam-reaction-distance-m",
+                "Distance threshold [m] for CAM-triggered evasive reaction",
+                cam_reaction_distance_m);
+  cmd.AddValue ("cam-reaction-heading-deg",
+                "Heading difference threshold [deg] for CAM-triggered evasive reaction",
+                cam_reaction_heading_deg);
+  cmd.AddValue ("cam-reaction-target-lane",
+                "Target lane index for CAM-triggered evasive lane change",
+                cam_reaction_target_lane);
+  cmd.AddValue ("cam-reaction-speed-factor-target-lane",
+                "Speed factor when already in target lane during CAM reaction",
+                cam_reaction_speed_factor_target_lane);
+  cmd.AddValue ("cam-reaction-speed-factor-other-lane",
+                "Speed factor when lane-changing during CAM reaction",
+                cam_reaction_speed_factor_other_lane);
+  cmd.AddValue ("cam-reaction-action-duration-s",
+                "Duration [s] of temporary speed/lane adaptation after CAM trigger",
+                cam_reaction_action_duration_s);
+  cmd.AddValue ("cpm-reaction-distance-m",
+                "Distance threshold [m] to consider CPM objects for evasive control",
+                cpm_reaction_distance_m);
+  cmd.AddValue ("cpm-reaction-ttc-s",
+                "TTC threshold [s] to trigger CPM-based evasive control",
+                cpm_reaction_ttc_s);
+  cmd.AddValue ("reaction-action-cooldown-s",
+                "Minimum interval [s] between consecutive evasive control actions",
+                reaction_action_cooldown_s);
+  cmd.AddValue ("reaction-force-lane-change-enable",
+                "Force evasive lane-change requests by disabling autonomous lane-change logic during action",
+                reaction_force_lane_change_enable);
+  cmd.AddValue ("crash-mode-enable",
+                "Enable crash-test mode: repeated drop_decision_no_action forces unsafe speed",
+                crash_mode_enable);
+  cmd.AddValue ("crash-mode-vehicle-id",
+                "Vehicle ID for crash-test mode (empty = all non-emergency vehicles)",
+                crash_mode_vehicle_id);
+  cmd.AddValue ("crash-mode-no-action-threshold",
+                "Consecutive drop_decision_no_action events needed to trigger crash mode",
+                crash_mode_no_action_threshold);
+  cmd.AddValue ("crash-mode-force-speed-mps",
+                "Forced speed [m/s] while crash-test mode is active",
+                crash_mode_force_speed_mps);
+  cmd.AddValue ("crash-mode-duration-s",
+                "Duration [s] of crash-test forced speed mode",
+                crash_mode_duration_s);
+  cmd.AddValue ("crash-mode-min-time-s",
+                "Do not activate crash-test mode before this simulation time [s]",
+                crash_mode_min_time_s);
   cmd.AddValue ("penetrationRate", "Rate of vehicles equipped with wireless communication devices", penetrationRate);
   cmd.AddValue ("sionna", "Enable SIONNA usage", sionna);
   cmd.AddValue ("sionna-server-ip", "SIONNA server IP address", server_ip);
@@ -201,6 +299,21 @@ main (int argc, char *argv[])
                 "Recovery max speed [m/s] after incident; negative keeps original speed",
                 incident_recover_max_speed_mps);
   cmd.AddValue ("incident-retry-max", "Max retries while waiting for incident vehicle to appear", incident_retry_max);
+  cmd.AddValue ("incident-setstop-enable",
+                "Use TraCI setStop during incident injection (disable to force in-place hold only)",
+                incident_setstop_enable);
+  cmd.AddValue ("sumo-collision-action",
+                "SUMO collision action override (empty keeps SUMO default)",
+                sumo_collision_action);
+  cmd.AddValue ("sumo-collision-output",
+                "SUMO collision-output XML path (empty disables output)",
+                sumo_collision_output);
+  cmd.AddValue ("sumo-collision-check-junctions",
+                "Enable SUMO collision checks on junctions when collision-action is set",
+                sumo_collision_check_junctions);
+  cmd.AddValue ("sumo-collision-stoptime-s",
+                "SUMO collision.stoptime [s]; negative disables explicit setting",
+                sumo_collision_stoptime_s);
 
   cmd.AddValue ("simTime",
                 "Simulation time in seconds",
@@ -705,6 +818,20 @@ main (int argc, char *argv[])
   {
     sumo_additional_options += " --netstate-dump " + sumo_netstate_file_name;
   }
+  if (!sumo_collision_action.empty ())
+    {
+      sumo_additional_options += " --collision.action " + sumo_collision_action;
+      sumo_additional_options += std::string (" --collision.check-junctions ")
+                                 + (sumo_collision_check_junctions ? "true" : "false");
+    }
+  if (!sumo_collision_output.empty ())
+    {
+      sumo_additional_options += " --collision-output " + sumo_collision_output;
+    }
+  if (sumo_collision_stoptime_s >= 0.0)
+    {
+      sumo_additional_options += " --collision.stoptime " + std::to_string (sumo_collision_stoptime_s);
+    }
 
   sumoClient->SetAttribute ("SumoAdditionalCmdOptions", StringValue (sumo_additional_options));
   // 1s is occasionally too short on loaded hosts/WSL and causes transient
@@ -741,6 +868,29 @@ main (int argc, char *argv[])
   EmergencyVehicleAlertHelper.SetAttribute ("RxDropProbCpm", DoubleValue (rx_drop_prob_cpm));
   EmergencyVehicleAlertHelper.SetAttribute ("RxDropProbPhyCam", DoubleValue (rx_drop_prob_phy_cam));
   EmergencyVehicleAlertHelper.SetAttribute ("RxDropProbPhyCpm", DoubleValue (rx_drop_prob_phy_cpm));
+  EmergencyVehicleAlertHelper.SetAttribute ("DropTriggeredReactionEnable", BooleanValue (drop_triggered_reaction_enable));
+  EmergencyVehicleAlertHelper.SetAttribute ("TargetLossProfileEnable", BooleanValue (target_loss_profile_enable));
+  EmergencyVehicleAlertHelper.SetAttribute ("TargetLossVehicleId", StringValue (target_loss_vehicle_id));
+  EmergencyVehicleAlertHelper.SetAttribute ("TargetLossRxDropProbCam", DoubleValue (target_loss_rx_drop_prob_cam));
+  EmergencyVehicleAlertHelper.SetAttribute ("TargetLossRxDropProbCpm", DoubleValue (target_loss_rx_drop_prob_cpm));
+  EmergencyVehicleAlertHelper.SetAttribute ("TargetLossRxDropProbPhyCam", DoubleValue (target_loss_rx_drop_prob_phy_cam));
+  EmergencyVehicleAlertHelper.SetAttribute ("TargetLossRxDropProbPhyCpm", DoubleValue (target_loss_rx_drop_prob_phy_cpm));
+  EmergencyVehicleAlertHelper.SetAttribute ("ReactionDistanceThreshold", DoubleValue (cam_reaction_distance_m));
+  EmergencyVehicleAlertHelper.SetAttribute ("ReactionHeadingThreshold", DoubleValue (cam_reaction_heading_deg));
+  EmergencyVehicleAlertHelper.SetAttribute ("ReactionTargetLane", IntegerValue (cam_reaction_target_lane));
+  EmergencyVehicleAlertHelper.SetAttribute ("ReactionSpeedFactorTargetLane", DoubleValue (cam_reaction_speed_factor_target_lane));
+  EmergencyVehicleAlertHelper.SetAttribute ("ReactionSpeedFactorOtherLane", DoubleValue (cam_reaction_speed_factor_other_lane));
+  EmergencyVehicleAlertHelper.SetAttribute ("ReactionActionDurationS", DoubleValue (cam_reaction_action_duration_s));
+  EmergencyVehicleAlertHelper.SetAttribute ("CpmReactionDistanceThreshold", DoubleValue (cpm_reaction_distance_m));
+  EmergencyVehicleAlertHelper.SetAttribute ("CpmReactionTtcThresholdS", DoubleValue (cpm_reaction_ttc_s));
+  EmergencyVehicleAlertHelper.SetAttribute ("ReactionActionCooldownS", DoubleValue (reaction_action_cooldown_s));
+  EmergencyVehicleAlertHelper.SetAttribute ("ReactionForceLaneChangeEnable", BooleanValue (reaction_force_lane_change_enable));
+  EmergencyVehicleAlertHelper.SetAttribute ("CrashModeEnable", BooleanValue (crash_mode_enable));
+  EmergencyVehicleAlertHelper.SetAttribute ("CrashModeVehicleId", StringValue (crash_mode_vehicle_id));
+  EmergencyVehicleAlertHelper.SetAttribute ("CrashModeNoActionThreshold", UintegerValue (crash_mode_no_action_threshold));
+  EmergencyVehicleAlertHelper.SetAttribute ("CrashModeForceSpeedMps", DoubleValue (crash_mode_force_speed_mps));
+  EmergencyVehicleAlertHelper.SetAttribute ("CrashModeDurationS", DoubleValue (crash_mode_duration_s));
+  EmergencyVehicleAlertHelper.SetAttribute ("CrashModeMinTimeS", DoubleValue (crash_mode_min_time_s));
 
   /* callback function for node creation */
   int i=0;
@@ -788,8 +938,9 @@ main (int argc, char *argv[])
     {
       auto incidentAttempts = std::make_shared<uint32_t> (0);
       auto originalMaxSpeed = std::make_shared<double> (-1.0);
+      auto originalSpeedMode = std::make_shared<int> (31);
       std::function<void ()> applyIncident;
-      applyIncident = [&, incidentAttempts, originalMaxSpeed] () mutable
+      applyIncident = [&, incidentAttempts, originalMaxSpeed, originalSpeedMode] () mutable
         {
           ++(*incidentAttempts);
           std::vector<std::string> activeVehicles = sumoClient->TraCIAPI::vehicle.getIDList ();
@@ -813,8 +964,20 @@ main (int argc, char *argv[])
           int laneIdx = sumoClient->TraCIAPI::vehicle.getLaneIndex (incident_vehicle_id);
           double lanePos = sumoClient->TraCIAPI::vehicle.getLanePosition (incident_vehicle_id);
           *originalMaxSpeed = sumoClient->TraCIAPI::vehicle.getMaxSpeed (incident_vehicle_id);
+          double speedNow = 0.0;
+          try
+            {
+              speedNow = std::max (0.0, sumoClient->TraCIAPI::vehicle.getSpeed (incident_vehicle_id));
+              *originalSpeedMode = sumoClient->TraCIAPI::vehicle.getSpeedMode (incident_vehicle_id);
+            }
+          catch (const std::exception &)
+            {
+              speedNow = 0.0;
+              *originalSpeedMode = 31;
+            }
 
           // Force immediate low-speed hold first (works even when setStop is rejected by SUMO).
+          sumoClient->TraCIAPI::vehicle.setSpeedMode (incident_vehicle_id, 0);
           sumoClient->TraCIAPI::vehicle.setMaxSpeed (incident_vehicle_id, 0.1);
           sumoClient->TraCIAPI::vehicle.setSpeed (incident_vehicle_id, 0.0);
           sumoClient->TraCIAPI::vehicle.slowDown (incident_vehicle_id, 0.0, 1.0);
@@ -843,31 +1006,136 @@ main (int argc, char *argv[])
             };
 
           bool stopApplied = false;
-          if (!roadId.empty () && roadId[0] != ':')
+          std::string stopEdgeUsed = roadId;
+          int stopLaneUsed = std::max (0, laneIdx);
+          double stopPosUsed = lanePos;
+          if (incident_setstop_enable && !roadId.empty () && roadId[0] != ':')
             {
-              int stopLane = std::max (0, laneIdx);
-              double stopPos = lanePos + 5.0;
-              if (!std::isfinite (stopPos) || stopPos < 1.0)
+              auto clampStopPos = [&] (const std::string& laneId, double rawPos)
                 {
-                  stopPos = 1.0;
-                }
-              try
+                  double stopPos = rawPos;
+                  if (!std::isfinite (stopPos) || stopPos < 1.0)
+                    {
+                      stopPos = 1.0;
+                    }
+                  try
+                    {
+                      double laneLength = sumoClient->TraCIAPI::lane.getLength (laneId);
+                      if (std::isfinite (laneLength) && laneLength > 1.0)
+                        {
+                          stopPos = std::min (stopPos, laneLength - 1.0);
+                        }
+                    }
+                  catch (const std::exception &)
+                    {
+                      // Keep raw stopPos if lane length is unavailable.
+                    }
+                  return stopPos;
+                };
+
+              auto calcRequiredGap = [&] (double speedMps)
                 {
+                  // Conservative braking buffer to avoid SUMO "too close to brake" errors.
+                  const double comfortableDecel = 3.0;
+                  double brakingDist = (speedMps * speedMps) / (2.0 * comfortableDecel);
+                  return std::max (35.0, brakingDist + 15.0);
+                };
+
+              auto trySetStop = [&] (const std::string& edgeId, int lane, double pos) -> bool
+                {
+                  if (edgeId.empty () || edgeId[0] == ':')
+                    {
+                      return false;
+                    }
+                  int stopLane = std::max (0, lane);
+                  std::string laneId = edgeId + "_" + std::to_string (stopLane);
+                  double stopPos = clampStopPos (laneId, pos);
+                  if (!std::isfinite (stopPos) || stopPos < 1.0)
+                    {
+                      stopPos = 1.0;
+                    }
                   sumoClient->TraCIAPI::vehicle.setStop (incident_vehicle_id,
-                                                         roadId,
+                                                         edgeId,
                                                          stopPos,
                                                          stopLane,
                                                          incident_stop_duration_s,
                                                          0,
                                                          0.0,
                                                          -1.0);
-                  stopApplied = true;
+                  stopEdgeUsed = edgeId;
+                  stopLaneUsed = stopLane;
+                  stopPosUsed = stopPos;
+                  return true;
+                };
+
+              // First attempt: stop on current edge only if there is enough distance to brake.
+              double requiredGap = calcRequiredGap (speedNow);
+              bool canTryCurrentEdge = false;
+              std::string laneIdCurrent = roadId + "_" + std::to_string (std::max (0, laneIdx));
+              try
+                {
+                  double laneLength = sumoClient->TraCIAPI::lane.getLength (laneIdCurrent);
+                  if (std::isfinite (laneLength) && std::isfinite (lanePos))
+                    {
+                      double remainingDist = laneLength - lanePos;
+                      canTryCurrentEdge = remainingDist > (requiredGap + 5.0);
+                    }
                 }
-              catch (const std::exception &e)
+              catch (const std::exception &)
+                {
+                  // If lane geometry is unavailable, skip current-edge stop and use next-edge fallback.
+                }
+
+              if (canTryCurrentEdge)
+                {
+                  double stopPosCurrent = lanePos + requiredGap;
+                  try
+                    {
+                      stopApplied = trySetStop (roadId, laneIdx, stopPosCurrent);
+                    }
+                  catch (const std::exception &eCurrent)
+                    {
+                      NS_LOG_WARN ("setStop on current edge failed for incident vehicle '" << incident_vehicle_id
+                                   << "': " << eCurrent.what ());
+                    }
+                }
+              else
+                {
+                  NS_LOG_INFO ("Skipping current-edge setStop for incident vehicle '" << incident_vehicle_id
+                               << "' because braking distance is too short.");
+                }
+
+              // Fallback: stop on next route edge to avoid \"too close to brake\" near junction.
+              if (!stopApplied)
+                {
+                  try
+                    {
+                      std::vector<std::string> route = sumoClient->TraCIAPI::vehicle.getRoute (incident_vehicle_id);
+                      int routeIndex = sumoClient->TraCIAPI::vehicle.getRouteIndex (incident_vehicle_id);
+                      if (routeIndex >= 0 && static_cast<size_t> (routeIndex + 1) < route.size ())
+                        {
+                          std::string nextEdge = route.at (routeIndex + 1);
+                          double nextEdgeStopPos = std::max (40.0, requiredGap * 0.75);
+                          stopApplied = trySetStop (nextEdge, 0, nextEdgeStopPos);
+                        }
+                    }
+                  catch (const std::exception &eNext)
+                    {
+                      NS_LOG_WARN ("setStop on next edge failed for incident vehicle '" << incident_vehicle_id
+                                   << "': " << eNext.what ());
+                    }
+                }
+
+              if (!stopApplied)
                 {
                   NS_LOG_WARN ("setStop failed for incident vehicle '" << incident_vehicle_id
-                               << "': " << e.what () << ". Falling back to low max-speed hold.");
+                               << "'. Falling back to low max-speed hold only.");
                 }
+            }
+          else if (!incident_setstop_enable)
+            {
+              NS_LOG_INFO ("setStop disabled for incident vehicle '" << incident_vehicle_id
+                           << "'. Keeping in-place low-speed hold only.");
             }
           (*holdStopped) (incident_stop_duration_s);
 
@@ -883,6 +1151,9 @@ main (int argc, char *argv[])
                     << ",road=" << roadId
                     << ",lane=" << laneIdx
                     << ",lane_pos_m=" << lanePos
+                    << ",stop_edge=" << stopEdgeUsed
+                    << ",stop_lane=" << stopLaneUsed
+                    << ",stop_pos_m=" << stopPosUsed
                     << ",duration_s=" << incident_stop_duration_s
                     << ",setStopApplied=" << (stopApplied ? 1 : 0)
                     << std::endl;
@@ -890,22 +1161,39 @@ main (int argc, char *argv[])
           if (incident_stop_duration_s > 0.0)
             {
               Simulator::Schedule (Seconds (incident_stop_duration_s),
-                                   [&, originalMaxSpeed] ()
+                                   [&, originalMaxSpeed, originalSpeedMode] ()
                                    {
                                      double recoverSpeed = incident_recover_max_speed_mps;
                                      if (recoverSpeed < 0.0)
                                        {
                                          recoverSpeed = *originalMaxSpeed;
                                        }
+                                     try
+                                       {
+                                         sumoClient->TraCIAPI::vehicle.setSpeedMode (incident_vehicle_id, *originalSpeedMode);
+                                       }
+                                     catch (const std::exception &e)
+                                       {
+                                         NS_LOG_WARN ("Incident speed-mode restore skipped for '" << incident_vehicle_id
+                                                      << "': " << e.what ());
+                                       }
                                      if (recoverSpeed > 0.0)
                                        {
-                                         sumoClient->TraCIAPI::vehicle.setMaxSpeed (incident_vehicle_id, recoverSpeed);
-                                         sumoClient->TraCIAPI::vehicle.setSpeed (incident_vehicle_id, -1.0);
-                                         sumoClient->TraCIAPI::vehicle.slowDown (incident_vehicle_id, recoverSpeed, 2.0);
-                                         std::cout << "INCIDENT-RELEASED,id=" << incident_vehicle_id
-                                                   << ",time_s=" << Simulator::Now ().GetSeconds ()
-                                                   << ",recover_max_speed_mps=" << recoverSpeed
-                                                   << std::endl;
+                                         try
+                                           {
+                                             sumoClient->TraCIAPI::vehicle.setMaxSpeed (incident_vehicle_id, recoverSpeed);
+                                             sumoClient->TraCIAPI::vehicle.setSpeed (incident_vehicle_id, -1.0);
+                                             sumoClient->TraCIAPI::vehicle.slowDown (incident_vehicle_id, recoverSpeed, 2.0);
+                                             std::cout << "INCIDENT-RELEASED,id=" << incident_vehicle_id
+                                                       << ",time_s=" << Simulator::Now ().GetSeconds ()
+                                                       << ",recover_max_speed_mps=" << recoverSpeed
+                                                       << std::endl;
+                                           }
+                                         catch (const std::exception &e)
+                                           {
+                                             NS_LOG_WARN ("Incident release skipped for '" << incident_vehicle_id
+                                                          << "': " << e.what ());
+                                           }
                                        }
                                    });
             }

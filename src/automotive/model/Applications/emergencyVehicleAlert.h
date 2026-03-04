@@ -111,12 +111,21 @@ class emergencyVehicleAlert : public Application
     void logCamTx (asn1cpp::Seq<CAM> cam);
     void LogControlEvent (const std::string& eventType,
                           long txId,
+                          long msgSeq,
+                          uint64_t packetUid,
                           double distanceMeters,
                           double headingDiffDeg,
                           int laneBefore,
                           int laneAfter,
                           double speedTarget);
-    void LogPhyDropEvent (uint16_t btpDestPort);
+    void LogPhyDropEvent (const GeoNet::RxPhyDropInfo& dropInfo);
+    void MaybeTriggerCrashModeOnNoActionDrop (long txId, long msgSeq, uint64_t packetUid);
+    bool ApplyEvasiveControl (const std::string& eventType,
+                              long txId,
+                              long msgSeq,
+                              uint64_t packetUid,
+                              double distanceMeters,
+                              double headingDiffDeg);
 
 
     /**
@@ -136,6 +145,15 @@ class emergencyVehicleAlert : public Application
 
     double m_distance_threshold;
     double m_heading_threshold;
+    int m_reaction_target_lane;
+    double m_reaction_speed_factor_target_lane;
+    double m_reaction_speed_factor_other_lane;
+    double m_reaction_action_duration_s;
+    double m_cpm_distance_threshold;
+    double m_cpm_ttc_threshold_s;
+    double m_control_action_cooldown_s;
+    bool m_reaction_force_lane_change_enable;
+    double m_last_control_action_s;
 
     Ptr<TraciClient> m_client; //!< TraCI client
     std::string m_id; //!< vehicle id
@@ -172,7 +190,24 @@ class emergencyVehicleAlert : public Application
     double m_rx_drop_prob_cpm;
     double m_rx_drop_prob_phy_cam;
     double m_rx_drop_prob_phy_cpm;
+    bool m_drop_triggered_reaction_enable;
+    bool m_target_loss_profile_enable;
+    std::string m_target_loss_vehicle_id;
+    double m_target_loss_rx_drop_prob_cam;
+    double m_target_loss_rx_drop_prob_cpm;
+    double m_target_loss_rx_drop_prob_phy_cam;
+    double m_target_loss_rx_drop_prob_phy_cpm;
+    bool m_target_loss_profile_applied;
     Ptr<UniformRandomVariable> m_drop_rv;
+    bool m_crash_mode_enable;
+    std::string m_crash_mode_vehicle_id;
+    uint32_t m_crash_mode_no_action_threshold;
+    double m_crash_mode_force_speed_mps;
+    double m_crash_mode_duration_s;
+    double m_crash_mode_min_time_s;
+    uint32_t m_drop_no_action_streak;
+    bool m_crash_mode_active;
+    EventId m_crash_mode_restore_ev;
 
     Ptr<MetricSupervisor> m_metric_supervisor = nullptr;
 

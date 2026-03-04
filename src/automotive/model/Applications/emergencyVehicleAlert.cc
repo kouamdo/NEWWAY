@@ -26,6 +26,7 @@
 #include "ns3/socket.h"
 #include "ns3/network-module.h"
 #include "ns3/gn-utils.h"
+#include <limits>
 
 #define DEG_2_RAD(val) ((val)*M_PI/180.0)
 
@@ -35,6 +36,8 @@ namespace ns3
   NS_LOG_COMPONENT_DEFINE("emergencyVehicleAlert");
 
   NS_OBJECT_ENSURE_REGISTERED(emergencyVehicleAlert);
+  constexpr uint16_t CAM_PORT = 2001;
+  constexpr uint16_t CPM_PORT = 2009;
 
   // Function to compute the distance between two objects, given their Lon/Lat
   double appUtil_haversineDist(double lat_a, double lon_a, double lat_b, double lon_b) {
@@ -130,7 +133,123 @@ namespace ns3
            "Probability to drop received CPM messages before upper layers (PHY/MAC emulation)",
            DoubleValue (0.0),
            MakeDoubleAccessor (&emergencyVehicleAlert::m_rx_drop_prob_phy_cpm),
-           MakeDoubleChecker<double> (0.0, 1.0));
+           MakeDoubleChecker<double> (0.0, 1.0))
+        .AddAttribute ("DropTriggeredReactionEnable",
+           "If true, a dropped CAM/CPM may still trigger evasive reaction. "
+           "If false, drop events produce strict drop_decision_no_action only.",
+           BooleanValue (false),
+           MakeBooleanAccessor (&emergencyVehicleAlert::m_drop_triggered_reaction_enable),
+           MakeBooleanChecker ())
+        .AddAttribute ("TargetLossProfileEnable",
+           "Enable per-vehicle RX drop override profile",
+           BooleanValue (false),
+           MakeBooleanAccessor (&emergencyVehicleAlert::m_target_loss_profile_enable),
+           MakeBooleanChecker ())
+        .AddAttribute ("TargetLossVehicleId",
+           "Vehicle id for per-vehicle RX drop override",
+           StringValue ("veh9"),
+           MakeStringAccessor (&emergencyVehicleAlert::m_target_loss_vehicle_id),
+           MakeStringChecker ())
+        .AddAttribute ("TargetLossRxDropProbCam",
+           "Per-vehicle application-level CAM drop probability override",
+           DoubleValue (1.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_target_loss_rx_drop_prob_cam),
+           MakeDoubleChecker<double> (0.0, 1.0))
+        .AddAttribute ("TargetLossRxDropProbCpm",
+           "Per-vehicle application-level CPM drop probability override",
+           DoubleValue (0.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_target_loss_rx_drop_prob_cpm),
+           MakeDoubleChecker<double> (0.0, 1.0))
+        .AddAttribute ("TargetLossRxDropProbPhyCam",
+           "Per-vehicle PHY-level CAM drop probability override",
+           DoubleValue (1.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_target_loss_rx_drop_prob_phy_cam),
+           MakeDoubleChecker<double> (0.0, 1.0))
+        .AddAttribute ("TargetLossRxDropProbPhyCpm",
+           "Per-vehicle PHY-level CPM drop probability override",
+           DoubleValue (0.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_target_loss_rx_drop_prob_phy_cpm),
+           MakeDoubleChecker<double> (0.0, 1.0))
+        .AddAttribute ("ReactionDistanceThreshold",
+           "Distance threshold [m] to trigger CAM-based evasive action",
+           DoubleValue (75.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_distance_threshold),
+           MakeDoubleChecker<double> (0.0))
+        .AddAttribute ("ReactionHeadingThreshold",
+           "Heading difference threshold [deg] to trigger CAM-based evasive action",
+           DoubleValue (45.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_heading_threshold),
+           MakeDoubleChecker<double> (0.0, 180.0))
+        .AddAttribute ("ReactionTargetLane",
+           "Target lane index for CAM-based evasive lane change",
+           IntegerValue (0),
+           MakeIntegerAccessor (&emergencyVehicleAlert::m_reaction_target_lane),
+           MakeIntegerChecker<int> (0))
+        .AddAttribute ("ReactionSpeedFactorTargetLane",
+           "Speed factor applied if vehicle is already in ReactionTargetLane",
+           DoubleValue (0.5),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_reaction_speed_factor_target_lane),
+           MakeDoubleChecker<double> (0.0))
+        .AddAttribute ("ReactionSpeedFactorOtherLane",
+           "Speed factor applied if vehicle changes to ReactionTargetLane",
+           DoubleValue (1.5),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_reaction_speed_factor_other_lane),
+           MakeDoubleChecker<double> (0.0))
+        .AddAttribute ("ReactionActionDurationS",
+           "Duration [s] for temporary lane/speed adaptation after CAM trigger",
+           DoubleValue (3.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_reaction_action_duration_s),
+           MakeDoubleChecker<double> (0.0))
+        .AddAttribute ("CpmReactionDistanceThreshold",
+           "Distance threshold [m] to consider a CPM object for evasive control",
+           DoubleValue (60.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_cpm_distance_threshold),
+           MakeDoubleChecker<double> (0.0))
+        .AddAttribute ("CpmReactionTtcThresholdS",
+           "TTC threshold [s] to trigger CPM-based evasive control",
+           DoubleValue (3.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_cpm_ttc_threshold_s),
+           MakeDoubleChecker<double> (0.0))
+        .AddAttribute ("ReactionActionCooldownS",
+           "Minimum interval [s] between consecutive evasive control actions",
+           DoubleValue (0.5),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_control_action_cooldown_s),
+           MakeDoubleChecker<double> (0.0))
+        .AddAttribute ("ReactionForceLaneChangeEnable",
+           "Force lane change requests by temporarily disabling autonomous lane-change logic",
+           BooleanValue (false),
+           MakeBooleanAccessor (&emergencyVehicleAlert::m_reaction_force_lane_change_enable),
+           MakeBooleanChecker ())
+        .AddAttribute ("CrashModeEnable",
+           "Enable crash-test mode: after repeated drop_decision_no_action, force unsafe speed control",
+           BooleanValue (false),
+           MakeBooleanAccessor (&emergencyVehicleAlert::m_crash_mode_enable),
+           MakeBooleanChecker ())
+        .AddAttribute ("CrashModeVehicleId",
+           "Optional vehicle id filter for crash-test mode (empty = all non-emergency vehicles)",
+           StringValue (std::string ()),
+           MakeStringAccessor (&emergencyVehicleAlert::m_crash_mode_vehicle_id),
+           MakeStringChecker ())
+        .AddAttribute ("CrashModeNoActionThreshold",
+           "How many consecutive drop_decision_no_action events trigger crash-test mode",
+           UintegerValue (5),
+           MakeUintegerAccessor (&emergencyVehicleAlert::m_crash_mode_no_action_threshold),
+           MakeUintegerChecker<uint32_t> (1))
+        .AddAttribute ("CrashModeForceSpeedMps",
+           "Forced speed [m/s] while crash-test mode is active",
+           DoubleValue (32.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_crash_mode_force_speed_mps),
+           MakeDoubleChecker<double> (0.0))
+        .AddAttribute ("CrashModeDurationS",
+           "How long [s] crash-test mode keeps forced speed and disabled speed safety",
+           DoubleValue (4.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_crash_mode_duration_s),
+           MakeDoubleChecker<double> (0.1))
+        .AddAttribute ("CrashModeMinTimeS",
+           "Do not activate crash-test mode before this simulation time [s]",
+           DoubleValue (0.0),
+           MakeDoubleAccessor (&emergencyVehicleAlert::m_crash_mode_min_time_s),
+           MakeDoubleChecker<double> (0.0));
         return tid;
   }
 
@@ -157,12 +276,37 @@ namespace ns3
     m_rx_drop_prob_cpm = 0.0;
     m_rx_drop_prob_phy_cam = 0.0;
     m_rx_drop_prob_phy_cpm = 0.0;
+    m_drop_triggered_reaction_enable = false;
+    m_target_loss_profile_enable = false;
+    m_target_loss_vehicle_id = "veh9";
+    m_target_loss_rx_drop_prob_cam = 1.0;
+    m_target_loss_rx_drop_prob_cpm = 0.0;
+    m_target_loss_rx_drop_prob_phy_cam = 1.0;
+    m_target_loss_rx_drop_prob_phy_cpm = 0.0;
+    m_target_loss_profile_applied = false;
     m_drop_rv = CreateObject<UniformRandomVariable> ();
     m_drop_rv->SetAttribute ("Min", DoubleValue (0.0));
     m_drop_rv->SetAttribute ("Max", DoubleValue (1.0));
 
     m_distance_threshold = 75; // Distance used in GeoNet to determine the radius of the circumference arounf the emergency vehicle where the DENMs are valid
     m_heading_threshold = 45; // Max heading angle difference between the normal vehicles and the emergenecy vehicle, that triggers a reaction in the normal vehicles
+    m_reaction_target_lane = 0;
+    m_reaction_speed_factor_target_lane = 0.5;
+    m_reaction_speed_factor_other_lane = 1.5;
+    m_reaction_action_duration_s = 3.0;
+    m_cpm_distance_threshold = 60.0;
+    m_cpm_ttc_threshold_s = 3.0;
+    m_control_action_cooldown_s = 0.5;
+    m_reaction_force_lane_change_enable = false;
+    m_last_control_action_s = -1e9;
+    m_crash_mode_enable = false;
+    m_crash_mode_vehicle_id.clear ();
+    m_crash_mode_no_action_threshold = 5;
+    m_crash_mode_force_speed_mps = 32.0;
+    m_crash_mode_duration_s = 4.0;
+    m_crash_mode_min_time_s = 0.0;
+    m_drop_no_action_streak = 0;
+    m_crash_mode_active = false;
   }
 
   emergencyVehicleAlert::~emergencyVehicleAlert ()
@@ -195,6 +339,24 @@ namespace ns3
     if (m_drop_rv != nullptr && m_id.size () > 3)
       {
         m_drop_rv->SetStream (std::stol (m_id.substr (3)));
+      }
+
+    m_target_loss_profile_applied = false;
+    if (m_target_loss_profile_enable &&
+        !m_target_loss_vehicle_id.empty () &&
+        m_id == m_target_loss_vehicle_id)
+      {
+        m_rx_drop_prob_cam = m_target_loss_rx_drop_prob_cam;
+        m_rx_drop_prob_cpm = m_target_loss_rx_drop_prob_cpm;
+        m_rx_drop_prob_phy_cam = m_target_loss_rx_drop_prob_phy_cam;
+        m_rx_drop_prob_phy_cpm = m_target_loss_rx_drop_prob_phy_cpm;
+        m_target_loss_profile_applied = true;
+        std::cout << "TARGET-LOSS-PROFILE,id=" << m_id
+                  << ",rx_drop_prob_cam=" << m_rx_drop_prob_cam
+                  << ",rx_drop_prob_cpm=" << m_rx_drop_prob_cpm
+                  << ",rx_drop_prob_phy_cam=" << m_rx_drop_prob_phy_cam
+                  << ",rx_drop_prob_phy_cpm=" << m_rx_drop_prob_phy_cpm
+                  << std::endl;
       }
 
     VDP* traci_vdp = new VDPTraCI(m_client,m_id);
@@ -280,6 +442,12 @@ namespace ns3
 
     libsumo::TraCIColor connected;
     connected.r=0;connected.g=225;connected.b=255;connected.a=255;
+    if (m_target_loss_profile_applied)
+      {
+        connected.r = 255;
+        connected.g = 0;
+        connected.b = 255;
+      }
     m_client->TraCIAPI::vehicle.setColor (m_id, connected);
 
     /* Set sockets, callback and station properties in DENBasicService */
@@ -351,9 +519,9 @@ namespace ns3
       m_csv_ofstream_cam.open (m_csv_name+"-"+m_id+"-CAM.csv",std::ofstream::trunc);
       m_csv_ofstream_cam << "messageId,camId,timestamp,latitude,longitude,heading,speed,acceleration" << std::endl;
       m_csv_ofstream_msg.open (m_csv_name+"-"+m_id+"-MSG.csv",std::ofstream::trunc);
-      m_csv_ofstream_msg << "vehicle_id,msg_seq,tx_t_s,rx_t_s,rx_ok,msg_type,tx_id,rx_id,cam_gdt_ms" << std::endl;
+      m_csv_ofstream_msg << "vehicle_id,msg_seq,tx_t_s,rx_t_s,rx_ok,msg_type,tx_id,rx_id,cam_gdt_ms,pkt_uid" << std::endl;
       m_csv_ofstream_ctrl.open (m_csv_name+"-"+m_id+"-CTRL.csv",std::ofstream::trunc);
-      m_csv_ofstream_ctrl << "time_s,vehicle_id,event_type,source_id,distance_m,heading_diff_deg,lane_before,lane_after,target_speed_mps" << std::endl;
+      m_csv_ofstream_ctrl << "time_s,vehicle_id,event_type,source_id,msg_seq,pkt_uid,distance_m,heading_diff_deg,lane_before,lane_after,target_speed_mps" << std::endl;
     }
   }
 
@@ -362,6 +530,7 @@ namespace ns3
   {
     NS_LOG_FUNCTION(this);
     Simulator::Cancel(m_speed_ev);
+    Simulator::Cancel(m_crash_mode_restore_ev);
     Simulator::Cancel(m_send_cam_ev);
     Simulator::Cancel(m_update_denm_ev);
 
@@ -423,12 +592,14 @@ namespace ns3
     long tx_id = asn1cpp::getField(cam->header.stationId,long);
     double now_s = Simulator::Now ().GetSeconds ();
     m_csv_ofstream_msg << m_id << "," << cam_gdt_ms << "," << now_s
-                       << ",," << 0 << ",CAM," << tx_id << ",," << cam_gdt_ms << std::endl;
+                       << ",," << 0 << ",CAM," << tx_id << ",," << cam_gdt_ms << "," << -1 << std::endl;
   }
 
   void
   emergencyVehicleAlert::LogControlEvent (const std::string& eventType,
                                           long txId,
+                                          long msgSeq,
+                                          uint64_t packetUid,
                                           double distanceMeters,
                                           double headingDiffDeg,
                                           int laneBefore,
@@ -443,6 +614,8 @@ namespace ns3
                         << "," << m_id
                         << "," << eventType
                         << "," << txId
+                        << "," << msgSeq
+                        << "," << packetUid
                         << "," << distanceMeters
                         << "," << headingDiffDeg
                         << "," << laneBefore
@@ -452,20 +625,15 @@ namespace ns3
   }
 
   void
-  emergencyVehicleAlert::LogPhyDropEvent (uint16_t btpDestPort)
+  emergencyVehicleAlert::LogPhyDropEvent (const GeoNet::RxPhyDropInfo& dropInfo)
   {
-    if (btpDestPort == 2001)
+    if (dropInfo.btpDestPort == CAM_PORT)
       {
         ++m_cam_dropped_phy;
       }
-    else if (btpDestPort == 2009)
+    else if (dropInfo.btpDestPort == CPM_PORT)
       {
         ++m_cpm_dropped_phy;
-      }
-
-    if (m_csv_name.empty () || !m_csv_ofstream_msg.is_open ())
-      {
-        return;
       }
 
     long rx_id = 0;
@@ -474,20 +642,212 @@ namespace ns3
         rx_id = std::stol (m_id.substr (3));
       }
 
-    if (btpDestPort == 2001)
+    std::string dropType = "OTHER_DROP_PHY";
+    if (dropInfo.btpDestPort == CAM_PORT)
       {
-        m_csv_ofstream_msg << m_id << "," << -1 << ",,"
-                           << Simulator::Now ().GetSeconds ()
-                           << "," << 0 << ",CAM_DROP_PHY,"
-                           << -1 << "," << rx_id << "," << -1 << std::endl;
+        dropType = "CAM_DROP_PHY";
       }
-    else if (btpDestPort == 2009)
+    else if (dropInfo.btpDestPort == CPM_PORT)
       {
-        m_csv_ofstream_msg << m_id << "," << -1 << ",,"
-                           << Simulator::Now ().GetSeconds ()
-                           << "," << 0 << ",CPM_DROP_PHY,"
-                           << -1 << "," << rx_id << "," << -1 << std::endl;
+        dropType = "CPM_DROP_PHY";
       }
+
+    if (!m_csv_name.empty () && m_csv_ofstream_msg.is_open ())
+      {
+        m_csv_ofstream_msg << m_id << "," << dropInfo.msgSeq << ",,"
+                           << Simulator::Now ().GetSeconds ()
+                           << "," << 0 << "," << dropType << ","
+                           << dropInfo.txStationId << "," << rx_id << "," << dropInfo.msgSeq
+                           << "," << dropInfo.packetUid << std::endl;
+      }
+
+    bool applyDropReaction = m_drop_triggered_reaction_enable &&
+                             (m_type != "emergency") &&
+                             (dropInfo.btpDestPort == CAM_PORT || dropInfo.btpDestPort == CPM_PORT);
+    if (applyDropReaction)
+      {
+        const std::string reactionType =
+          (dropInfo.btpDestPort == CAM_PORT) ? "cam_drop_reaction" : "cpm_drop_reaction";
+        bool applied = ApplyEvasiveControl (reactionType,
+                                            dropInfo.txStationId,
+                                            dropInfo.msgSeq,
+                                            dropInfo.packetUid,
+                                            -1.0,
+                                            -1.0);
+        if (!applied)
+          {
+            LogControlEvent ("drop_decision_no_action",
+                             dropInfo.txStationId,
+                             dropInfo.msgSeq,
+                             dropInfo.packetUid,
+                             -1.0,
+                             -1.0,
+                             -1,
+                             -1,
+                             -1.0);
+            MaybeTriggerCrashModeOnNoActionDrop (dropInfo.txStationId, dropInfo.msgSeq, dropInfo.packetUid);
+          }
+      }
+    else
+      {
+        LogControlEvent ("drop_decision_no_action",
+                         dropInfo.txStationId,
+                         dropInfo.msgSeq,
+                         dropInfo.packetUid,
+                         -1.0,
+                         -1.0,
+                         -1,
+                         -1,
+                         -1.0);
+        MaybeTriggerCrashModeOnNoActionDrop (dropInfo.txStationId, dropInfo.msgSeq, dropInfo.packetUid);
+      }
+  }
+
+  void
+  emergencyVehicleAlert::MaybeTriggerCrashModeOnNoActionDrop (long txId, long msgSeq, uint64_t packetUid)
+  {
+    if (!m_crash_mode_enable || m_type == "emergency")
+      {
+        return;
+      }
+    if (Simulator::Now ().GetSeconds () < std::max (0.0, m_crash_mode_min_time_s))
+      {
+        return;
+      }
+    if (!m_crash_mode_vehicle_id.empty () && m_id != m_crash_mode_vehicle_id)
+      {
+        return;
+      }
+
+    ++m_drop_no_action_streak;
+    if (m_crash_mode_active)
+      {
+        return;
+      }
+    if (m_drop_no_action_streak < std::max (1u, m_crash_mode_no_action_threshold))
+      {
+        return;
+      }
+
+    const double forcedSpeed = std::max (0.0, m_crash_mode_force_speed_mps);
+    const double activeDuration = std::max (0.1, m_crash_mode_duration_s);
+    try
+      {
+        // 0 disables speed safety checks for TraCI speed commands.
+        m_client->TraCIAPI::vehicle.setSpeedMode (m_id, 0);
+        // 0 disables autonomous lane changes; needed for deterministic collision tests.
+        m_client->TraCIAPI::vehicle.setLaneChangeMode (m_id, 0);
+        m_client->TraCIAPI::vehicle.setSpeed (m_id, forcedSpeed);
+      }
+    catch (const std::exception &e)
+      {
+        NS_LOG_WARN ("Crash mode activation failed for '" << m_id << "': " << e.what ());
+        return;
+      }
+
+    libsumo::TraCIColor crashColor;
+    crashColor.r = 255;
+    crashColor.g = 0;
+    crashColor.b = 0;
+    crashColor.a = 255;
+    m_client->TraCIAPI::vehicle.setColor (m_id, crashColor);
+    m_crash_mode_active = true;
+    LogControlEvent ("crash_mode_forced_speed",
+                     txId,
+                     msgSeq,
+                     packetUid,
+                     -1.0,
+                     -1.0,
+                     -1,
+                     -1,
+                     forcedSpeed);
+
+    Simulator::Remove (m_crash_mode_restore_ev);
+    m_crash_mode_restore_ev = Simulator::Schedule (
+      Seconds (activeDuration),
+      [this] ()
+      {
+        try
+          {
+            // 31 restores default SUMO speed checks.
+            m_client->TraCIAPI::vehicle.setSpeedMode (m_id, 31);
+            // 1621 is SUMO default lane change mode.
+            m_client->TraCIAPI::vehicle.setLaneChangeMode (m_id, 1621);
+            m_client->TraCIAPI::vehicle.setSpeed (m_id, -1.0);
+          }
+        catch (const std::exception &e)
+          {
+            NS_LOG_WARN ("Crash mode restore failed for '" << m_id << "': " << e.what ());
+          }
+        m_crash_mode_active = false;
+        m_drop_no_action_streak = 0;
+        LogControlEvent ("crash_mode_restore",
+                         -1,
+                         -1,
+                         static_cast<uint64_t> (-1),
+                         -1.0,
+                         -1.0,
+                         -1,
+                         -1,
+                         -1.0);
+      });
+  }
+
+  bool
+  emergencyVehicleAlert::ApplyEvasiveControl (const std::string& eventType,
+                                              long txId,
+                                              long msgSeq,
+                                              uint64_t packetUid,
+                                              double distanceMeters,
+                                              double headingDiffDeg)
+  {
+    double nowS = Simulator::Now ().GetSeconds ();
+    if ((nowS - m_last_control_action_s) < std::max (0.0, m_control_action_cooldown_s))
+      {
+        return false;
+      }
+
+    int laneBefore = m_client->TraCIAPI::vehicle.getLaneIndex (m_id);
+    int laneAfter = std::max (0, m_reaction_target_lane);
+    double targetSpeedFactor =
+      (laneBefore == laneAfter) ? m_reaction_speed_factor_target_lane : m_reaction_speed_factor_other_lane;
+    double targetSpeed = m_max_speed * std::max (0.0, targetSpeedFactor);
+    double actionDuration = std::max (0.1, m_reaction_action_duration_s);
+
+    if (m_reaction_force_lane_change_enable)
+      {
+        // 0 disables autonomous lane-change logic, making command-driven lane changes deterministic.
+        m_client->TraCIAPI::vehicle.setLaneChangeMode (m_id, 0);
+      }
+    m_client->TraCIAPI::vehicle.changeLane (m_id, laneAfter, actionDuration);
+    m_client->TraCIAPI::vehicle.setMaxSpeed (m_id, targetSpeed);
+
+    libsumo::TraCIColor adapted;
+    if (laneBefore == laneAfter)
+      {
+        adapted.r=232;adapted.g=126;adapted.b=4;adapted.a=255;
+      }
+    else
+      {
+        adapted.r=0;adapted.g=128;adapted.b=80;adapted.a=255;
+      }
+    m_client->TraCIAPI::vehicle.setColor (m_id,adapted);
+    m_control_actions++;
+    m_last_control_action_s = nowS;
+    m_drop_no_action_streak = 0;
+    LogControlEvent (eventType,
+                     txId,
+                     msgSeq,
+                     packetUid,
+                     distanceMeters,
+                     headingDiffDeg,
+                     laneBefore,
+                     laneAfter,
+                     targetSpeed);
+
+    Simulator::Remove(m_speed_ev);
+    m_speed_ev = Simulator::Schedule (Seconds (actionDuration), &emergencyVehicleAlert::SetMaxSpeed, this);
+    return true;
   }
 
   void
@@ -511,7 +871,7 @@ namespace ns3
            m_csv_ofstream_msg << m_id << "," << cam_gdt_ms << ",,"
                               << Simulator::Now ().GetSeconds ()
                               << "," << 0 << ",CAM_DROP_APP,"
-                              << tx_id << "," << rx_id << "," << cam_gdt_ms << std::endl;
+                              << tx_id << "," << rx_id << "," << cam_gdt_ms << "," << -1 << std::endl;
          }
        return;
      }
@@ -529,40 +889,10 @@ namespace ns3
                                            (double)asn1cpp::getField(cam->cam.camParameters.highFrequencyContainer.choice.basicVehicleContainerHighFrequency.heading.headingValue,HeadingValue_t)/DECI);
 
      /* If the distance between the "passenger" car and the emergency vehicle and the difference in the heading angles
-      * are below certain thresholds, then actuate the slow-down strategy */
+     * are below certain thresholds, then actuate the slow-down strategy */
      if (distance < m_distance_threshold && headingDiff < m_heading_threshold)
      {
-       /* Slowdown only if you are not in the takeover lane,
-        * otherwise the emergency vechicle may get stuck behind */
-       int laneBefore = m_client->TraCIAPI::vehicle.getLaneIndex (m_id);
-       if (laneBefore == 0)
-       {
-         double targetSpeed = m_max_speed * 0.5;
-         m_client->TraCIAPI::vehicle.changeLane (m_id,0,3);
-         m_client->TraCIAPI::vehicle.setMaxSpeed (m_id, targetSpeed);
-         libsumo::TraCIColor orange;
-         orange.r=232;orange.g=126;orange.b=4;orange.a=255;
-         m_client->TraCIAPI::vehicle.setColor (m_id,orange);
-         m_control_actions++;
-         LogControlEvent ("lane0_slowdown", tx_id, distance, headingDiff, laneBefore, 0, targetSpeed);
-
-         Simulator::Remove(m_speed_ev);
-         m_speed_ev = Simulator::Schedule (Seconds (3.0), &emergencyVehicleAlert::SetMaxSpeed, this);
-       }
-       else
-       {
-         double targetSpeed = m_max_speed * 1.5;
-         m_client->TraCIAPI::vehicle.changeLane (m_id,0,3);
-         m_client->TraCIAPI::vehicle.setMaxSpeed (m_id, targetSpeed);
-         libsumo::TraCIColor green;
-         green.r=0;green.g=128;green.b=80;green.a=255;
-         m_client->TraCIAPI::vehicle.setColor (m_id,green);
-         m_control_actions++;
-         LogControlEvent ("lane1_speedup", tx_id, distance, headingDiff, laneBefore, 0, targetSpeed);
-
-         Simulator::Remove(m_speed_ev);
-         m_speed_ev = Simulator::Schedule (Seconds (3.0), &emergencyVehicleAlert::SetMaxSpeed, this);
-       }
+       ApplyEvasiveControl ("cam_reaction", tx_id, cam_gdt_ms, static_cast<uint64_t> (-1), distance, headingDiff);
      }
    }
 
@@ -578,7 +908,7 @@ namespace ns3
    if (!m_csv_name.empty () && m_csv_ofstream_msg.is_open ())
      {
        m_csv_ofstream_msg << m_id << "," << cam_gdt_ms << ",," << Simulator::Now ().GetSeconds ()
-                          << "," << 1 << ",CAM," << tx_id << "," << rx_id << "," << cam_gdt_ms << std::endl;
+                          << "," << 1 << ",CAM," << tx_id << "," << rx_id << "," << cam_gdt_ms << "," << -1 << std::endl;
      }
 
   }
@@ -586,7 +916,6 @@ namespace ns3
   void
   emergencyVehicleAlert::receiveCPMV1 (asn1cpp::Seq<CPMV1> cpm, Address from)
   {
-    /* Implement CPM strategy here */
     long tx_id = asn1cpp::getField (cpm->header.stationId,long);
     long msg_seq = asn1cpp::getField (cpm->cpm.generationDeltaTime,long);
     long rx_id = 0;
@@ -602,12 +931,31 @@ namespace ns3
             m_csv_ofstream_msg << m_id << "," << msg_seq << ",,"
                                << Simulator::Now ().GetSeconds ()
                                << "," << 0 << ",CPM_DROP_APP,"
-                               << tx_id << "," << rx_id << "," << msg_seq << std::endl;
+                               << tx_id << "," << rx_id << "," << msg_seq << "," << -1 << std::endl;
           }
         return;
       }
     m_cpm_received++;
     (void) from;
+
+    bool cpmHazardDetected = false;
+    double minHazardDistance = std::numeric_limits<double>::infinity ();
+    double minHazardTtc = std::numeric_limits<double>::infinity ();
+    const bool canApplyCpmControl = (m_type != "emergency");
+    const double cpmDistanceThreshold = std::max (0.0, m_cpm_distance_threshold);
+    const double cpmTtcThreshold = std::max (0.0, m_cpm_ttc_threshold_s);
+    double egoLat = 0.0;
+    double egoLon = 0.0;
+    double egoSpeed = 0.0;
+    if (canApplyCpmControl && cpmDistanceThreshold > 0.0 && cpmTtcThreshold > 0.0)
+      {
+        libsumo::TraCIPosition egoPos = m_client->TraCIAPI::vehicle.getPosition (m_id);
+        egoPos = m_client->TraCIAPI::simulation.convertXYtoLonLat (egoPos.x, egoPos.y);
+        egoLon = egoPos.x;
+        egoLat = egoPos.y;
+        egoSpeed = m_client->TraCIAPI::vehicle.getSpeed (m_id);
+      }
+
     NS_LOG_INFO ("[" << Simulator::Now ().GetSeconds () << "] " << m_id
                  << " received a new CPMv1 from vehicle " << tx_id
                  << " with "
@@ -624,22 +972,51 @@ namespace ns3
             LDM::returnedVehicleData_t PO_data;
             auto PO_seq = asn1cpp::makeSeq(PerceivedObjectV1);
             PO_seq = asn1cpp::sequenceof::getSeq(cpm->cpm.cpmParameters.perceivedObjectContainer,PerceivedObjectV1,i);
+            vehicleData_t translatedObject = translateCPMV1data (cpm, i);
             //If PO is already in local copy of vLDM
             if(m_LDM->lookup(asn1cpp::getField(PO_seq->objectID,long),PO_data) == LDM::LDM_OK)
               {
                   //Add the new perception to the LDM
-                  std::vector<long> associatedCVs = PO_data.vehData.associatedCVs.getData ();
+                  std::vector<long> associatedCVs;
+                  if (PO_data.vehData.associatedCVs.isAvailable ())
+                    {
+                      associatedCVs = PO_data.vehData.associatedCVs.getData ();
+                    }
                   if(std::find(associatedCVs.begin(), associatedCVs.end (), asn1cpp::getField(cpm->header.stationId,long)) == associatedCVs.end ())
                     associatedCVs.push_back (asn1cpp::getField(cpm->header.stationId,long));
-                  PO_data.vehData.associatedCVs = OptionalDataItem<std::vector<long>>(associatedCVs);
-                  m_LDM->insert (PO_data.vehData);
+                  translatedObject.associatedCVs = OptionalDataItem<std::vector<long>>(associatedCVs);
+                  m_LDM->insert (translatedObject);
               }
             else
               {
                //Translate CPM data to LDM format
-               m_LDM->insert(translateCPMV1data(cpm,i));
+               m_LDM->insert(translatedObject);
+              }
+
+            if (canApplyCpmControl && cpmDistanceThreshold > 0.0 && cpmTtcThreshold > 0.0)
+              {
+                double distance = appUtil_haversineDist (egoLat, egoLon, translatedObject.lat, translatedObject.lon);
+                if (distance <= cpmDistanceThreshold)
+                  {
+                    double closingSpeed = egoSpeed - translatedObject.speed_ms;
+                    if (closingSpeed > 0.1)
+                      {
+                        double ttc = distance / closingSpeed;
+                        if (ttc <= cpmTtcThreshold && ttc < minHazardTtc)
+                          {
+                            cpmHazardDetected = true;
+                            minHazardTtc = ttc;
+                            minHazardDistance = distance;
+                          }
+                      }
+                  }
               }
           }
+      }
+
+    if (cpmHazardDetected)
+      {
+        ApplyEvasiveControl ("cpm_reaction", tx_id, msg_seq, static_cast<uint64_t> (-1), minHazardDistance, -1.0);
       }
   }
 
@@ -711,11 +1088,14 @@ namespace ns3
     normal.r=0;normal.g=225;normal.b=255;normal.a=255;
     m_client->TraCIAPI::vehicle.setColor (m_id, normal);
     m_client->TraCIAPI::vehicle.setMaxSpeed (m_id, m_max_speed);
+    if (m_reaction_force_lane_change_enable)
+      {
+        m_client->TraCIAPI::vehicle.setLaneChangeMode (m_id, 1621);
+      }
   }
   void
   emergencyVehicleAlert::receiveCPM (asn1cpp::Seq<CollectivePerceptionMessage> cpm, Address from)
   {
-    /* Implement CPM strategy here */
     long tx_id = asn1cpp::getField (cpm->header.stationId,long);
     long msg_seq = asn1cpp::getField (cpm->payload.managementContainer.referenceTime,long);
     long rx_id = 0;
@@ -731,12 +1111,31 @@ namespace ns3
             m_csv_ofstream_msg << m_id << "," << msg_seq << ",,"
                                << Simulator::Now ().GetSeconds ()
                                << "," << 0 << ",CPM_DROP_APP,"
-                               << tx_id << "," << rx_id << "," << msg_seq << std::endl;
+                               << tx_id << "," << rx_id << "," << msg_seq << "," << -1 << std::endl;
           }
         return;
       }
     m_cpm_received++;
     (void) from;
+
+    bool cpmHazardDetected = false;
+    double minHazardDistance = std::numeric_limits<double>::infinity ();
+    double minHazardTtc = std::numeric_limits<double>::infinity ();
+    const bool canApplyCpmControl = (m_type != "emergency");
+    const double cpmDistanceThreshold = std::max (0.0, m_cpm_distance_threshold);
+    const double cpmTtcThreshold = std::max (0.0, m_cpm_ttc_threshold_s);
+    double egoLat = 0.0;
+    double egoLon = 0.0;
+    double egoSpeed = 0.0;
+    if (canApplyCpmControl && cpmDistanceThreshold > 0.0 && cpmTtcThreshold > 0.0)
+      {
+        libsumo::TraCIPosition egoPos = m_client->TraCIAPI::vehicle.getPosition (m_id);
+        egoPos = m_client->TraCIAPI::simulation.convertXYtoLonLat (egoPos.x, egoPos.y);
+        egoLon = egoPos.x;
+        egoLat = egoPos.y;
+        egoSpeed = m_client->TraCIAPI::vehicle.getSpeed (m_id);
+      }
+
     //For every PO inside the CPM, if any
     //auto wrappedContainer = asn1cpp::makeSeq(WrappedCpmContainer);
     int wrappedContainer_size = asn1cpp::sequenceof::getSize(cpm->payload.cpmContainers);
@@ -756,23 +1155,52 @@ namespace ns3
                LDM::returnedVehicleData_t PO_data;
                auto PO_seq = asn1cpp::makeSeq(PerceivedObject);
                PO_seq = asn1cpp::sequenceof::getSeq(POcontainer->perceivedObjects,PerceivedObject,j);
+               vehicleData_t translatedObject = translateCPMdata (cpm, PO_seq, j);
                //If PO is already in local copy of vLDM
                if(m_LDM->lookup(asn1cpp::getField(PO_seq->objectId,long),PO_data) == LDM::LDM_OK)
                     {
                       //Add the new perception to the LDM
-                      std::vector<long> associatedCVs = PO_data.vehData.associatedCVs.getData ();
+                      std::vector<long> associatedCVs;
+                      if (PO_data.vehData.associatedCVs.isAvailable ())
+                        {
+                          associatedCVs = PO_data.vehData.associatedCVs.getData ();
+                        }
                       if(std::find(associatedCVs.begin(), associatedCVs.end (), asn1cpp::getField(cpm->header.stationId,long)) == associatedCVs.end ())
                         associatedCVs.push_back (asn1cpp::getField(cpm->header.stationId,long));
-                      PO_data.vehData.associatedCVs = OptionalDataItem<std::vector<long>>(associatedCVs);
-                      m_LDM->insert (PO_data.vehData);
+                      translatedObject.associatedCVs = OptionalDataItem<std::vector<long>>(associatedCVs);
+                      m_LDM->insert (translatedObject);
                     }
                else
                     {
                       //Translate CPM data to LDM format
-                      m_LDM->insert(translateCPMdata(cpm,PO_seq,j));
+                      m_LDM->insert(translatedObject);
                     }
+
+               if (canApplyCpmControl && cpmDistanceThreshold > 0.0 && cpmTtcThreshold > 0.0)
+                 {
+                   double distance = appUtil_haversineDist (egoLat, egoLon, translatedObject.lat, translatedObject.lon);
+                   if (distance <= cpmDistanceThreshold)
+                     {
+                       double closingSpeed = egoSpeed - translatedObject.speed_ms;
+                       if (closingSpeed > 0.1)
+                         {
+                           double ttc = distance / closingSpeed;
+                           if (ttc <= cpmTtcThreshold && ttc < minHazardTtc)
+                             {
+                               cpmHazardDetected = true;
+                               minHazardTtc = ttc;
+                               minHazardDistance = distance;
+                             }
+                         }
+                     }
+                 }
               }
         }
+      }
+
+    if (cpmHazardDetected)
+      {
+        ApplyEvasiveControl ("cpm_reaction", tx_id, msg_seq, static_cast<uint64_t> (-1), minHazardDistance, -1.0);
       }
   }
   vehicleData_t
@@ -787,7 +1215,7 @@ namespace ns3
     retval.vehicleWidth = asn1cpp::getField(object->objectDimensionY->value,long);
     retval.heading = asn1cpp::getField(object->angles->zAngle.value,double) / DECI;
     retval.xSpeedAbs.setData (asn1cpp::getField(object->velocity->choice.cartesianVelocity.xVelocity.value,long));
-    retval.xSpeedAbs.setData (asn1cpp::getField(object->velocity->choice.cartesianVelocity.yVelocity.value,long));
+    retval.ySpeedAbs.setData (asn1cpp::getField(object->velocity->choice.cartesianVelocity.yVelocity.value,long));
     retval.speed_ms = (sqrt (pow(retval.xSpeedAbs.getData(),2) +
                              pow(retval.ySpeedAbs.getData(),2)))/CENTI;
 

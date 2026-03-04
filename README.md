@@ -1,10 +1,4 @@
-# VaN3Twin
-
-<div align="center">
-<img src="img/VaN3Twin_logo_v5_blk.png" width="400">
-</div>
-
-<br/><br/>
+# NEWWAY
 
 [<img src="img/docs.png" height="40">](https://ms-van3ts-documentation.readthedocs.io/en/master/)
 
@@ -22,16 +16,24 @@ This project is licensed under a GPL-2.0 License. Please see also the `LICENSE` 
 ## Looking for ms-van3t?
 __Were you looking for <img src="img/MS-VAN3T_logo-V2_small.png" height="30"> but ended up here?__
 
-VaN3Twin now integrates the whole ms-van3t framework, and much more, keeping the same functionalities, just under a new name, and with the addition of new functionalities like the integration with a full-fledged ray-tracer!
+NEWWAY now integrates the whole ms-van3t framework, and much more, keeping the same functionalities, just under a new name, and with the addition of new functionalities like the integration with a full-fledged ray-tracer!
 
 **Important:** you will still find the name __ms-van3t__ in many parts of the framework. We are in the process of renaming all the references and files, but this may take a bit of time.
 
-## VaN3Twin installation
+## NEWWAY installation
 
 For a reproducible developer checklist (`setup`, `configure`, `build`, `test`, `run`) and common bootstrap issues, see `DEVELOPMENT.md`.
 
 For a curated launch map of key V2X scenarios (`cttc-nr-v2x-demo-simple`, `nr-v2x-west-to-east-highway`, `v2v-cam-exchange-sionna-nrv2x`, `v2v-coexistence-80211p-nrv2x`), see `scenarios/README.md`.
 Latest reproducible run evidence is stored in `analysis/scenario_runs/`.
+For post-run audits and ID-aware drop/decision timelines, see:
+- `analysis/scenario_runs/analyze_all_logs.py`
+- `analysis/scenario_runs/build_drop_decision_timeline.py`
+- `analysis/scenario_runs/build_valid_scenario_story_plots.py`
+
+For the fixed thesis-ready bidirectional coupling case (`veh3` lane change, `veh4` lossy collision with `veh2`, `veh5` late lane change + traffic jam retention), use:
+- `valid_scenario/run.sh`
+- `valid_scenario/README.md`
 
 Scenario `run.sh` scripts can now auto-bootstrap a local `ns-3-dev` workspace if it is missing, auto-configure it with examples enabled, and work from root shells (`NS3_USER_OVERRIDE`) when needed (see `scenarios/README.md`).
 
@@ -57,21 +59,21 @@ To build the project:
 
 * Clone this repository in your pc:
 
-`git clone https://github.com/DriveX-devs/VaN3Twin.git`
+`git clone https://github.com/DriveX-devs/NEWWAY.git`
 
 * Run, from this repository either:
 
-`./sandbox_builder.sh install-dependencies` -> if this is the first time you install ns-3 or VaN3Twin on your system
+`./sandbox_builder.sh install-dependencies` -> if this is the first time you install ns-3 or NEWWAY on your system
 
 or
 
 `./sandbox_builder.sh` -> if this is **not** the first time you install ns-3 
 
-This script will download the proper version of ns-3-dev and install this framework. The folder `ns-3-dev` will remain linked to this GitHub repository (not to the vanilla ns-3-dev one), allowing you to more easily develop updates and possibile contributions to *VaN3Twin*.
+This script will download the proper version of ns-3-dev and install this framework. The folder `ns-3-dev` will remain linked to this GitHub repository (not to the vanilla ns-3-dev one), allowing you to more easily develop updates and possibile contributions to *NEWWAY*.
     
 * Configure `ns3` to build the framework with `<ns3-folder>./ns3 configure --build-profile=optimized --enable-examples --enable-tests --disable-python (add here what you want to enable)"` - The usage of the optimized profile allows to speed up the simulation time. This command should be launched from inside the `ns-3-dev` folder.
 
-* **Important**: If you are compiling VaN3Twin on Ubuntu 22.04 LTS or later, you need to specify, when calling `./ns3 configure`, also the `--disable-werror` flag
+* **Important**: If you are compiling NEWWAY on Ubuntu 22.04 LTS or later, you need to specify, when calling `./ns3 configure`, also the `--disable-werror` flag
 
 * Build ns3:
 `./ns3 build`
@@ -92,12 +94,12 @@ The user is also encouraged to use the `sumo_files_v2v_map` and `sumo_files_v2i_
 
 # Working with an IDE
 
-Although not necessarily required, you can also configure an IDE in order to more comfortably work with VaN3Twin.
-The suggested IDEs, which has also been used for the development of VaN3Twin, are _QtCreator_ and _CLion_.
+Although not necessarily required, you can also configure an IDE in order to more comfortably work with NEWWAY.
+The suggested IDEs, which has also been used for the development of NEWWAY, are _QtCreator_ and _CLion_.
 
 ## QtCreator
 
-You can find all the instructions for setting up QtCreator with ns-3 (and the same applies to VaN3Twin, as it is based on ns-3) on the [official ns-3 Wiki](https://www.nsnam.org/wiki/HOWTO_configure_QtCreator_with_ns-3).
+You can find all the instructions for setting up QtCreator with ns-3 (and the same applies to NEWWAY, as it is based on ns-3) on the [official ns-3 Wiki](https://www.nsnam.org/wiki/HOWTO_configure_QtCreator_with_ns-3).
 
 QtCreator can be installed on Debian/Ubuntu with:
 `sudo apt install qtcreator`
@@ -113,20 +115,20 @@ Not installing `libclang-common-8-dev` may result in QtCreator wrongly highlight
 
 CLion can be easily installed with the [JetBrains Toolbox App](https://www.jetbrains.com/toolbox-app/).
 
-You can find all the instructions for setting up CLion with ns-3 (and the same applies to VaN3Twin, as it is based on ns-3) on our [documentation](https://ms-van3ts-documentation.readthedocs.io/en/master/IDE.html#clion).
+You can find all the instructions for setting up CLion with ns-3 (and the same applies to NEWWAY, as it is based on ns-3) on our [documentation](https://ms-van3ts-documentation.readthedocs.io/en/master/IDE.html#clion).
 
-# VaN3Twin-CARLA extension
+# NEWWAY-CARLA extension
 
-In addition to SUMO and GPS traces VaN3Twin supports the use of CARLA for mobility and sensor perception simulation. This extension leverages the [OpenCDA framework](https://github.com/ucla-mobility/OpenCDA) to develop an LDM module and extend the gRPC adapter devised [here](https://github.com/veins/veins_carla) to be able to extract not only localization information from CARLA but also perception information from the LDM module. The developed client module on ns-3 queries the information to use it for the mobility of each of the ns-3 simulated nodes and to update the LDM module with all perception data sent over the simulated vehicular network. 
+In addition to SUMO and GPS traces NEWWAY supports the use of CARLA for mobility and sensor perception simulation. This extension leverages the [OpenCDA framework](https://github.com/ucla-mobility/OpenCDA) to develop an LDM module and extend the gRPC adapter devised [here](https://github.com/veins/veins_carla) to be able to extract not only localization information from CARLA but also perception information from the LDM module. The developed client module on ns-3 queries the information to use it for the mobility of each of the ns-3 simulated nodes and to update the LDM module with all perception data sent over the simulated vehicular network. 
 
 **System requirements**
 
-We highly recommend running VaN3Twin-CARLA on Ubuntu 20.04 (used for developing the framework) or Ubuntu 18.04, Ubuntu 22.04 is not officially supported by CARLA. If both CARLA and OpenCDA need to be installed we recommend at least 35GB of free space on your system. For smooth execution of simulation (especially if AI/ML models are leveraged for the perception simulation) we recommend using a GPU with at least 8GB of memory.
-The version of CARLA supported by VaN3Twin-CARLA is CARLA 0.9.12.
+We highly recommend running NEWWAY-CARLA on Ubuntu 20.04 (used for developing the framework) or Ubuntu 18.04, Ubuntu 22.04 is not officially supported by CARLA. If both CARLA and OpenCDA need to be installed we recommend at least 35GB of free space on your system. For smooth execution of simulation (especially if AI/ML models are leveraged for the perception simulation) we recommend using a GPU with at least 8GB of memory.
+The version of CARLA supported by NEWWAY-CARLA is CARLA 0.9.12.
 
-**Installing VaN3Twin-CARLA**
+**Installing NEWWAY-CARLA**
 
-To be able to use VaN3Twin-CARLA, CARLA and OpenCDA need to be installed. After following the steps detailed above to build the project, from inside the `ns-3-dev` folder execute the `switch_ms-van3t-CARLA.sh` script to install all necessary dependencies. 
+To be able to use NEWWAY-CARLA, CARLA and OpenCDA need to be installed. After following the steps detailed above to build the project, from inside the `ns-3-dev` folder execute the `switch_ms-van3t-CARLA.sh` script to install all necessary dependencies. 
 The script will try to find the path of your CARLA and OpenCDA installation to be defined in the `CARLA-OpenCDA.conf` file. If the user already has an installation of either CARLA or OpenCDA they should specify the path to the installation together with the path to their Python environment in the following way: 
 
 `CARLA_HOME=/path/to/CARLA_0.9.12`
@@ -143,12 +145,12 @@ This permits avoiding libraries and dependency issues coming from other parts of
 **Possible issues with CARLA and OpenCDA installation**
 
 Below is a list of possible issues that can arise during the configuration and possible ways to prevent/solve them:
-- In case OpenCDA was already present inside the VaN3Twin folder from previous runs of the script `switch_ms-van3t-CARLA.sh`, it is recommended to clean the cache of OpenCDA's folder before running again the installation script again, with the command: `sudo rm -r OpenCDA/cache/`.
+- In case OpenCDA was already present inside the NEWWAY folder from previous runs of the script `switch_ms-van3t-CARLA.sh`, it is recommended to clean the cache of OpenCDA's folder before running again the installation script again, with the command: `sudo rm -r OpenCDA/cache/`.
 - In case the anaconda virtual environment `msvan3t_carla` was already present in your system from previous runs of the script `switch_ms-van3t-CARLA.sh`, it is recommended to delete it before running again the installation script, with `conda remove -n msvan3t_carla --all` or `sudo rm -r ~/anaconda3/envs/environment_folder/`.
 - The anaconda environment solution steps (i.e., the prints `Solving environment:` in the installation phase) might take a while to complete, especially if it is not the first time you try to install the packages. It is normal to wait for some minutes.
 - There is an issue encountered in some edge cases, in which the configuration file to use OpenCDA's perception module is not working properly (`ms_van3t_example_ml`). We are still investigating the problem, since it happens only in some particular situations. To use CARLA and OpenCDA in any case, we suggest to adopt the default OpenCDA's configuration file (`ms_van3t_example`).
 
-**VaN3Twin-CARLA examples**
+**NEWWAY-CARLA examples**
 
 Two examples leveraging CARLA are provided, showcasing how to use the extension with both IEEE 802.11p and NR-V2X as access technologies.
 To run the provided examples: 
@@ -157,9 +159,9 @@ To run the provided examples:
 
  For further description of the modules provided in this extension please refer to our paper [here](https://www.eurecom.fr/publication/7556/download/comsys-publi-7556.pdf).
 
-# VaN3Twin NVIDIA-Sionna extension
+# NEWWAY NVIDIA-Sionna extension
 
-To integrate `NVIDIA Sionna` with the `VaN3Twin` framework, you need to install the Python library for Sionna.
+To integrate `NVIDIA Sionna` with the `NEWWAY` framework, you need to install the Python library for Sionna.
 
 This can be done locally or on a remote server using the following command:
 
@@ -182,7 +184,7 @@ The arguments of both the two Python scripts are:
 - `--local_machine`, include this argument if you want Sionna to run on the local machine. If not provided, the script will interpret that Sionna is running on a remote server.
 - `--verbose`, include this argument if you want to print Sionna logs to the console.
 
-The `sionna_server_script.py`/`sionna_v1_server_script.py` script automatically identifies the presence of a GPU and configures TensorFlow accordingly. It also sets up a UDP socket to communicate with the `VaN3Twin` framework, handling various types of messages such as location (and speed in the v1 script) updates, path loss requests, delay requests, and line-of-sight (LOS) checks.
+The `sionna_server_script.py`/`sionna_v1_server_script.py` script automatically identifies the presence of a GPU and configures TensorFlow accordingly. It also sets up a UDP socket to communicate with the `NEWWAY` framework, handling various types of messages such as location (and speed in the v1 script) updates, path loss requests, delay requests, and line-of-sight (LOS) checks.
 
 Example usage:
 
@@ -190,16 +192,16 @@ Example usage:
   python3 sionna_v1_server_script.py --file_name src/sionna/scenarios/SionnaCircleScenario/scene.xml --local-machine --verbose
 ```
 
-If you are running Sionna on a remote server, you need to specify the IP address of the SIONNA server in your simulation file inside VaN3Twin.
+If you are running Sionna on a remote server, you need to specify the IP address of the SIONNA server in your simulation file inside NEWWAY.
 
-For instance, the `src/automotive/examples/v2v-cam-exchange-sionna-80211p.cc` simulation contains an example of how to configure the communication between VaN3Twin and Sionna on the VaN3Twin's side.
+For instance, the `src/automotive/examples/v2v-cam-exchange-sionna-80211p.cc` simulation contains an example of how to configure the communication between NEWWAY and Sionna on the NEWWAY's side.
 Refer to this example to configure the IP address for a remote SIONNA server in your simulation file.
 
-By following these steps, you can successfully integrate `Sionna` with `VaN3Twin` framework and run simulations that leverage Sionna's ray tracing capabilities.
+By following these steps, you can successfully integrate `Sionna` with `NEWWAY` framework and run simulations that leverage Sionna's ray tracing capabilities.
 
-# VaN3Twin co-channel coexistence extension
+# NEWWAY co-channel coexistence extension
 
-`VaN3Twin` offers a special module to simulate the coexistence between different CAVS communication technologies.
+`NEWWAY` offers a special module to simulate the coexistence between different CAVS communication technologies.
 Currently, the simulator can integrate scenarios where vehicles use either the `IEEE 802.11p` or `NR-V2X` communication stacks, even when their channels overlap.
 
 The interference management is done by a special module called `TxTracker`.
@@ -224,7 +226,7 @@ To enable this specific feature of the simulator, it is important to **follow th
     ./ns3 run "v2v-coexistence-80211p-nrv2x"
    ```
    
-4. To come back to the **normal mode** of `VaN3Twin`, run the `./switch_ms-van3t-interference.sh` script again but with the `off` argument:
+4. To come back to the **normal mode** of `NEWWAY`, run the `./switch_ms-van3t-interference.sh` script again but with the `off` argument:
    ```sh
     ./switch_ms-van3t-interference.sh off
    ```
@@ -240,7 +242,7 @@ For more details on how to manage the co-channel coexistence simulations, such a
 
 # Supported ETSI C-ITS messages
 
-*VaN3Twin* currently supports the following ETSI C-ITS messages:
+*NEWWAY* currently supports the following ETSI C-ITS messages:
 - CAM
 - DENM
 - IVIM
@@ -251,7 +253,7 @@ For the transmission and reception of IVIMs (from an RSU to vehicles), you can r
 
 # Introduction of ETSI DCC (DCC_NET, DCC_CROSS, DCC_ACC – Reactive & Adaptive)
 
-*VaN3Twin* now includes a full implementation of the **ETSI Decentralized Congestion Control (DCC)** mechanism, enabling realistic modeling of channel access regulation and cooperative congestion management for ITS-G5 / ITS-G5-like stacks.
+*NEWWAY* now includes a full implementation of the **ETSI Decentralized Congestion Control (DCC)** mechanism, enabling realistic modeling of channel access regulation and cooperative congestion management for ITS-G5 / ITS-G5-like stacks.
 The implemented DCC framework follows the [ETSI TS 102 687](https://www.etsi.org/deliver/etsi_ts/102600_102699/102687/01.02.01_60/ts_102687v010201p.pdf) specification and supports all three control components:
 
 * **DCC_NET (Network Layer DCC)**
@@ -277,10 +279,10 @@ The implemented DCC framework follows the [ETSI TS 102 687](https://www.etsi.org
 * **Channel load monitoring**
   The PHY layers (IEEE 802.11p) export real-time channel occupancy metrics to the DCC engine, allowing accurate CBR-based congestion estimation.
 
-* **Compatible with all VaN3Twin ITS-G5 scenarios**
+* **Compatible with all NEWWAY ITS-G5 scenarios**
   DCC logic can be automatically enabled for all ETSI ITS-G5 simulations (CAM, DENM, CPM, VAM, IVIM) with few lines of code in user applications.
 
-### How DCC Is Enabled in VaN3Twin
+### How DCC Is Enabled in NEWWAY
 
 DCC is **not implicitly enabled by default**. Instead, each vehicle that should run ETSI DCC explicitly receives its own DCC instance during the setup phase:
 
@@ -337,11 +339,11 @@ Together, these parameters allow DCC to be configured with realistic, ETSI-compl
 | **DCC_ACC – Reactive** | ✔️        | Fast-timescale state machine triggered by instant CBR |
 | **DCC_ACC – Adaptive** | ✔️        | Slow-timescale smoothing + stable congestion mitigation |
 
-This integration provides a realistic, standards-aligned congestion control behavior, enabling *VaN3Twin* to simulate dense ITS scenarios with high fidelity, including edge cases such as large-scale beaconing, clustered traffic, and multi-technology coexistence (e.g., when combined with the coexistence module).
+This integration provides a realistic, standards-aligned congestion control behavior, enabling *NEWWAY* to simulate dense ITS scenarios with high fidelity, including edge cases such as large-scale beaconing, clustered traffic, and multi-technology coexistence (e.g., when combined with the coexistence module).
 
 # Sample V2I example and V2I/V2N applications
 
-*VaN3Twin* currently supports two stacks/communication technologies for V2I/V2N:
+*NEWWAY* currently supports two stacks/communication technologies for V2I/V2N:
 - 802.11p, communicating, for instance, with a Road Side Unit (sample program name: `v2i-areaSpeedAdvisor-80211p`)
 - LTE, for V2N communications (sample program name: `v2i-areaSpeedAdvisor-lte`)
 
@@ -399,7 +401,7 @@ If using the LTE version in this very simple toy case, it is possible to connect
 
 # Sample V2V example and V2V applications
 
-*VaN3Twin* currently supports three stacks/communication technologies for V2V:
+*NEWWAY* currently supports three stacks/communication technologies for V2V:
 - 802.11p (sample program name: `v2v-emergencyVehicleAlert-80211p`)
 - LTE-V2X Mode 4 (sample program name: `v2v-emergencyVehicleAlert-cv2x`)
 - NR-V2X Mode 2 (sample program name: `v2v-emergencyVehicleAlert-nrv2x`))
@@ -445,7 +447,7 @@ The SUMO map also embeds some re-routers allowing the vehicles to continuously t
 
 # Sample V2X emulator application
 
-*VaN3Twin* also includes an example of an emulation application, which is able to send the CAMs and DENMs generated by the vehicles, (virtually) travelling on the SUMO map, over a real network, by relying on a physical interface.
+*NEWWAY* also includes an example of an emulation application, which is able to send the CAMs and DENMs generated by the vehicles, (virtually) travelling on the SUMO map, over a real network, by relying on a physical interface.
 
 The same application should also be able to receive CAMs and DENMs coming from the external world (i.e. from a certain physical interface of the device running ns-3).
 
@@ -511,11 +513,11 @@ The following screenshot shows a Wireshark capture of the messages sent by the e
 * `--subnet                     [string] To specify the subnet which will  be used to assign the IP addresses of emulated nodes (the .1 address is automatically excluded)`
 *  `--netmask                     [string] To specify the netmask of the network`
 
-# VaN3Twin web-based vehicle visualizer
+# NEWWAY web-based vehicle visualizer
 
 **Requirement:** if you want to use this module, Node.js should be installed (on Ubuntu/Debian you can install it with `sudo apt install nodejs`).
 
-*VaN3Twin* also comes with a web-based vehicle visualizer, able to display the vehicles travelling
+*NEWWAY* also comes with a web-based vehicle visualizer, able to display the vehicles travelling
 during the simulation on a map, rendered directly inside the user's browser.
 
 It can be particularly useful when working with GPS Traces (see the `gps-tc` module), which are not
@@ -527,7 +529,7 @@ relies on Mapbox to draw the street, hybrid and satellite map layers.
 **Once you get it, the mapbox token shall be copied inside the file `mapbox_token` in `src/vehicle-visualizer/js`**
 
 You can find more information on Mapbox [here](https://www.mapbox.com/). They currently have quite good free tier options (allowing, at least in March 2021, up to 200000 free tile requests/month),
-which should be enough to use the VaN3Twin vehicle visualizer without the need of paying anything. Please check them before signing up to Mapbox
+which should be enough to use the NEWWAY vehicle visualizer without the need of paying anything. Please check them before signing up to Mapbox
 and getting a token to be used here. In general, we found out that a normal simulation, in which some sporadic zoom in/zoom out and
 three layer changes are performed, may require around 150/200 tile requests (we advise you to check often the tile request count on the Mapbox website, when you use your token).
 
@@ -606,12 +608,12 @@ To acknowledge us in your publication(s) please refer to the following publicati
 
 Our manuscript is open access and it is available [here](https://doi.org/10.1016/j.comcom.2024.01.022).
 
-### Main VaN3Twin publication (pre-print, 2025)
+### Main NEWWAY publication (pre-print, 2025)
 
 Our work has been submitted and a pre-print is available [on arXiv](https://arxiv.org/abs/2505.14184):
 ```tex
-@misc{pegurri2025van3twinmultitechnologyv2xdigital,
-      title={VaN3Twin: the Multi-Technology V2X Digital Twin with Ray-Tracing in the Loop}, 
+@misc{pegurri2025newwaymultitechnologyv2xdigital,
+      title={NEWWAY: the Multi-Technology V2X Digital Twin with Ray-Tracing in the Loop}, 
       author={Roberto Pegurri and Diego Gasco and Francesco Linsalata and Marco Rapelli and Eugenio Moro and Francesco Raviglione and Claudio Casetti},
       year={2025},
       eprint={2505.14184},
