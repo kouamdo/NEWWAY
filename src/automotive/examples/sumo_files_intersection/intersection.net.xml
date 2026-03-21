@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  4-way signalized intersection for V2X 5G NR thesis experiments.
+  Two 2-lane roads crossing at center junction "C".
+  Arms: N (north), S (south), E (east), W (west), each ~200m long.
+  Speed limit 50 km/h (13.89 m/s).
+-->
+<net version="1.6" junctionCornerDetail="5" limitTurnSpeed="5.50"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/net_file.xsd">
+
+    <location netOffset="200.00,200.00" convBoundary="0.00,0.00,400.00,400.00"
+              origBoundary="0,0,400,400" projParameter="!"/>
+
+    <!-- ======================== EDGES (road segments) ======================== -->
+    <!-- West approach → Center -->
+    <edge id="W_to_C" from="W" to="C" priority="2">
+        <lane id="W_to_C_0" index="0" speed="13.89" length="193.50" shape="0.00,198.50 193.50,198.50"/>
+        <lane id="W_to_C_1" index="1" speed="13.89" length="193.50" shape="0.00,195.25 193.50,195.25"/>
+    </edge>
+    <!-- Center → East -->
+    <edge id="C_to_E" from="C" to="E" priority="2">
+        <lane id="C_to_E_0" index="0" speed="13.89" length="193.50" shape="206.50,201.50 400.00,201.50"/>
+        <lane id="C_to_E_1" index="1" speed="13.89" length="193.50" shape="206.50,204.75 400.00,204.75"/>
+    </edge>
+
+    <!-- East approach → Center -->
+    <edge id="E_to_C" from="E" to="C" priority="2">
+        <lane id="E_to_C_0" index="0" speed="13.89" length="193.50" shape="400.00,201.50 206.50,201.50"/>
+        <lane id="E_to_C_1" index="1" speed="13.89" length="193.50" shape="400.00,204.75 206.50,204.75"/>
+    </edge>
+    <!-- Center → West -->
+    <edge id="C_to_W" from="C" to="W" priority="2">
+        <lane id="C_to_W_0" index="0" speed="13.89" length="193.50" shape="193.50,201.50 0.00,201.50"/>
+        <lane id="C_to_W_1" index="1" speed="13.89" length="193.50" shape="193.50,204.75 0.00,204.75"/>
+    </edge>
+
+    <!-- South approach → Center -->
+    <edge id="S_to_C" from="S" to="C" priority="2">
+        <lane id="S_to_C_0" index="0" speed="13.89" length="193.50" shape="201.50,0.00 201.50,193.50"/>
+        <lane id="S_to_C_1" index="1" speed="13.89" length="193.50" shape="204.75,0.00 204.75,193.50"/>
+    </edge>
+    <!-- Center → North -->
+    <edge id="C_to_N" from="C" to="N" priority="2">
+        <lane id="C_to_N_0" index="0" speed="13.89" length="193.50" shape="198.50,206.50 198.50,400.00"/>
+        <lane id="C_to_N_1" index="1" speed="13.89" length="193.50" shape="195.25,206.50 195.25,400.00"/>
+    </edge>
+
+    <!-- North approach → Center -->
+    <edge id="N_to_C" from="N" to="C" priority="2">
+        <lane id="N_to_C_0" index="0" speed="13.89" length="193.50" shape="198.50,400.00 198.50,206.50"/>
+        <lane id="N_to_C_1" index="1" speed="13.89" length="193.50" shape="195.25,400.00 195.25,206.50"/>
+    </edge>
+    <!-- Center → South -->
+    <edge id="C_to_S" from="C" to="S" priority="2">
+        <lane id="C_to_S_0" index="0" speed="13.89" length="193.50" shape="201.50,193.50 201.50,0.00"/>
+        <lane id="C_to_S_1" index="1" speed="13.89" length="193.50" shape="204.75,193.50 204.75,0.00"/>
+    </edge>
+
+    <!-- ======================== JUNCTIONS ======================== -->
+    <junction id="W" type="dead_end" x="0.00" y="200.00" incLanes="C_to_W_0 C_to_W_1" intLanes=""
+              shape="0.00,206.38 0.00,193.62"/>
+    <junction id="E" type="dead_end" x="400.00" y="200.00" incLanes="E_to_C_0 E_to_C_1" intLanes=""
+              shape="400.00,193.62 400.00,206.38"/>
+    <junction id="S" type="dead_end" x="200.00" y="0.00" incLanes="C_to_S_0 C_to_S_1" intLanes=""
+              shape="193.62,0.00 206.38,0.00"/>
+    <junction id="N" type="dead_end" x="200.00" y="400.00" incLanes="N_to_C_0 N_to_C_1" intLanes=""
+              shape="206.38,400.00 193.62,400.00"/>
+
+    <junction id="C" type="traffic_light" x="200.00" y="200.00"
+              incLanes="W_to_C_0 W_to_C_1 S_to_C_0 S_to_C_1 E_to_C_0 E_to_C_1 N_to_C_0 N_to_C_1"
+              intLanes=""
+              shape="193.50,206.50 206.50,206.50 206.50,193.50 193.50,193.50">
+        <request index="0" response="0000" foes="0000"/>
+        <request index="1" response="0000" foes="0000"/>
+        <request index="2" response="0000" foes="0000"/>
+        <request index="3" response="0000" foes="0000"/>
+    </junction>
+
+    <!-- ======================== CONNECTIONS ======================== -->
+    <!-- W→C go straight to E -->
+    <connection from="W_to_C" to="C_to_E" fromLane="0" toLane="0" dir="s" state="o"/>
+    <connection from="W_to_C" to="C_to_E" fromLane="1" toLane="1" dir="s" state="o"/>
+    <!-- W→C turn left to S -->
+    <connection from="W_to_C" to="C_to_S" fromLane="0" toLane="0" dir="l" state="o"/>
+
+    <!-- E→C go straight to W -->
+    <connection from="E_to_C" to="C_to_W" fromLane="0" toLane="0" dir="s" state="o"/>
+    <connection from="E_to_C" to="C_to_W" fromLane="1" toLane="1" dir="s" state="o"/>
+    <!-- E→C turn left to N -->
+    <connection from="E_to_C" to="C_to_N" fromLane="0" toLane="0" dir="l" state="o"/>
+
+    <!-- S→C go straight to N -->
+    <connection from="S_to_C" to="C_to_N" fromLane="0" toLane="0" dir="s" state="o"/>
+    <connection from="S_to_C" to="C_to_N" fromLane="1" toLane="1" dir="s" state="o"/>
+    <!-- S→C turn left to E -->
+    <connection from="S_to_C" to="C_to_E" fromLane="0" toLane="0" dir="l" state="o"/>
+
+    <!-- N→C go straight to S -->
+    <connection from="N_to_C" to="C_to_S" fromLane="0" toLane="0" dir="s" state="o"/>
+    <connection from="N_to_C" to="C_to_S" fromLane="1" toLane="1" dir="s" state="o"/>
+    <!-- N→C turn left to W -->
+    <connection from="N_to_C" to="C_to_W" fromLane="0" toLane="0" dir="l" state="o"/>
+
+    <!-- ======================== TRAFFIC LIGHT ======================== -->
+    <tlLogic id="C" type="static" programID="0" offset="0">
+        <!-- Phase 1: W-E green (30s) -->
+        <phase duration="30" state="GGGrrrrrrGGGrrrrr"/>
+        <!-- Phase 2: W-E yellow (4s) -->
+        <phase duration="4"  state="yyyrrrrrryyyrrrrrr"/>
+        <!-- Phase 3: N-S green (30s) -->
+        <phase duration="30" state="rrrrrGGGrrrrrrGGG"/>
+        <!-- Phase 4: N-S yellow (4s) -->
+        <phase duration="4"  state="rrrrryyyrrrrryyy"/>
+    </tlLogic>
+
+</net>

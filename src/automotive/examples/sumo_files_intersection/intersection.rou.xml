@@ -1,0 +1,71 @@
+<routes>
+  <!-- ============================================================
+       Intersection collision scenario for 5G NR thesis.
+
+       Scenario: veh_west_1 approaches from West, veh_south_1 from South.
+       Both approach the intersection simultaneously.
+       veh_south_1 (autonomous) relies on CAM from veh_west_1 to yield.
+       With 5G NR message loss, veh_south_1 is "blind" → T-bone collision.
+       ============================================================ -->
+
+  <!-- Routes through the intersection -->
+  <route id="r_west_east"  edges="W_to_C C_to_E"/>
+  <route id="r_east_west"  edges="E_to_C C_to_W"/>
+  <route id="r_south_north" edges="S_to_C C_to_N"/>
+  <route id="r_north_south" edges="N_to_C C_to_S"/>
+
+  <!-- Vehicle types -->
+  <vType id="ConnectedCar" accel="3.0" decel="5.0" emergencyDecel="8.0"
+         sigma="0.0" tau="0.8" minGap="1.5" maxSpeed="13.89" length="5.0"
+         lcStrategic="0.0" lcCooperative="0.0" lcSpeedGain="0.0" lcKeepRight="0.0"/>
+
+  <vType id="AutonomousCar" accel="3.5" decel="6.0" emergencyDecel="9.0"
+         sigma="0.0" tau="0.5" minGap="1.0" maxSpeed="13.89" length="5.0"
+         color="1,0,0"
+         lcStrategic="0.0" lcCooperative="0.0" lcSpeedGain="0.0" lcKeepRight="0.0"/>
+
+  <vType id="BackgroundCar" accel="2.5" decel="4.0" emergencyDecel="7.0"
+         sigma="0.3" tau="1.0" minGap="2.0" maxSpeed="13.89" length="5.0"/>
+
+  <!-- ====== Critical vehicles: simultaneous intersection approach ====== -->
+  <!-- West→East: connected vehicle crossing on green -->
+  <vehicle id="veh_w1" type="ConnectedCar" route="r_west_east" depart="3.0"
+           departLane="0" departPos="10" departSpeed="12.0"/>
+  <vehicle id="veh_w2" type="ConnectedCar" route="r_west_east" depart="3.0"
+           departLane="1" departPos="5" departSpeed="11.5"/>
+
+  <!-- South→North: autonomous vehicle that relies on CAM to detect cross-traffic -->
+  <vehicle id="veh_s1" type="AutonomousCar" route="r_south_north" depart="3.0"
+           departLane="0" departPos="10" departSpeed="12.5"/>
+  <vehicle id="veh_s2" type="AutonomousCar" route="r_south_north" depart="5.0"
+           departLane="0" departPos="10" departSpeed="12.0"/>
+
+  <!-- ====== Background traffic: creates congestion and NR interference ====== -->
+  <!-- East→West flow -->
+  <vehicle id="veh_e1" type="BackgroundCar" route="r_east_west" depart="1.0"
+           departLane="0" departPos="10" departSpeed="10.0"/>
+  <vehicle id="veh_e2" type="BackgroundCar" route="r_east_west" depart="4.0"
+           departLane="0" departPos="10" departSpeed="11.0"/>
+  <vehicle id="veh_e3" type="BackgroundCar" route="r_east_west" depart="7.0"
+           departLane="0" departPos="10" departSpeed="10.5"/>
+
+  <!-- North→South flow -->
+  <vehicle id="veh_n1" type="BackgroundCar" route="r_north_south" depart="1.0"
+           departLane="0" departPos="10" departSpeed="10.0"/>
+  <vehicle id="veh_n2" type="BackgroundCar" route="r_north_south" depart="6.0"
+           departLane="0" departPos="10" departSpeed="11.0"/>
+
+  <!-- Additional West→East background -->
+  <vehicle id="veh_w3" type="BackgroundCar" route="r_west_east" depart="6.0"
+           departLane="0" departPos="5" departSpeed="10.0"/>
+  <vehicle id="veh_w4" type="BackgroundCar" route="r_west_east" depart="9.0"
+           departLane="0" departPos="5" departSpeed="11.0"/>
+  <vehicle id="veh_w5" type="BackgroundCar" route="r_west_east" depart="12.0"
+           departLane="0" departPos="5" departSpeed="10.5"/>
+
+  <!-- Additional South→North background -->
+  <vehicle id="veh_s3" type="BackgroundCar" route="r_south_north" depart="8.0"
+           departLane="0" departPos="5" departSpeed="10.0"/>
+  <vehicle id="veh_s4" type="BackgroundCar" route="r_south_north" depart="11.0"
+           departLane="0" departPos="5" departSpeed="11.0"/>
+</routes>
