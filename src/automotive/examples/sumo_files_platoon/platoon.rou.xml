@@ -1,0 +1,52 @@
+<routes>
+  <!-- ============================================================
+       Platoon emergency braking scenario for 5G NR thesis.
+
+       Scenario: 6-vehicle platoon in lane 1 (middle), tight spacing.
+       veh_lead brakes hard at ~10s (incident injection).
+       Followers rely on CAM for cooperative braking.
+       With 5G NR loss, rear vehicles react late → pile-up.
+
+       Background traffic in lanes 0 and 2 for realistic NR load.
+       ============================================================ -->
+
+  <route id="r_forward" edges="highway"/>
+
+  <!-- Platoon leader: will be stopped via incident injection -->
+  <vType id="PlatoonLeader" accel="3.5" decel="7.0" emergencyDecel="9.5"
+         sigma="0.0" tau="0.3" minGap="1.0" maxSpeed="30.0" length="5.0"
+         color="0,0,1"
+         lcStrategic="0.0" lcCooperative="0.0" lcSpeedGain="0.0" lcKeepRight="0.0"/>
+
+  <!-- Platoon followers: close-following connected vehicles -->
+  <vType id="PlatoonFollower" accel="3.5" decel="6.0" emergencyDecel="8.5"
+         sigma="0.0" tau="0.3" minGap="1.0" maxSpeed="30.0" length="5.0"
+         color="0,0.5,1"
+         lcStrategic="0.0" lcCooperative="0.0" lcSpeedGain="0.0" lcKeepRight="0.0"/>
+
+  <!-- Background traffic vehicles -->
+  <vType id="BackgroundHwy" accel="2.5" decel="4.5" emergencyDecel="7.0"
+         sigma="0.3" tau="1.2" minGap="2.5" maxSpeed="30.0" length="5.0"/>
+
+  <!-- ====== PLATOON (lane 1, middle lane, tight spacing ~8m) ====== -->
+  <vehicle id="veh_lead" type="PlatoonLeader"   route="r_forward" depart="0.5" departLane="1" departPos="500" departSpeed="28.0"/>
+  <vehicle id="veh_f1"   type="PlatoonFollower"  route="r_forward" depart="0.5" departLane="1" departPos="490" departSpeed="28.0"/>
+  <vehicle id="veh_f2"   type="PlatoonFollower"  route="r_forward" depart="0.5" departLane="1" departPos="480" departSpeed="28.0"/>
+  <vehicle id="veh_f3"   type="PlatoonFollower"  route="r_forward" depart="0.5" departLane="1" departPos="470" departSpeed="28.0"/>
+  <vehicle id="veh_f4"   type="PlatoonFollower"  route="r_forward" depart="0.5" departLane="1" departPos="460" departSpeed="28.0"/>
+  <vehicle id="veh_f5"   type="PlatoonFollower"  route="r_forward" depart="0.5" departLane="1" departPos="450" departSpeed="28.0"/>
+
+  <!-- ====== BACKGROUND lane 0 (right) ====== -->
+  <vehicle id="veh_bg1"  type="BackgroundHwy" route="r_forward" depart="0.5" departLane="0" departPos="300" departSpeed="22.0"/>
+  <vehicle id="veh_bg2"  type="BackgroundHwy" route="r_forward" depart="2.0" departLane="0" departPos="200" departSpeed="23.0"/>
+  <vehicle id="veh_bg3"  type="BackgroundHwy" route="r_forward" depart="4.0" departLane="0" departPos="150" departSpeed="22.5"/>
+  <vehicle id="veh_bg4"  type="BackgroundHwy" route="r_forward" depart="6.0" departLane="0" departPos="100" departSpeed="21.0"/>
+  <vehicle id="veh_bg5"  type="BackgroundHwy" route="r_forward" depart="8.0" departLane="0" departPos="100" departSpeed="22.0"/>
+
+  <!-- ====== BACKGROUND lane 2 (left/fast) ====== -->
+  <vehicle id="veh_bg6"  type="BackgroundHwy" route="r_forward" depart="1.0" departLane="2" departPos="400" departSpeed="30.0"/>
+  <vehicle id="veh_bg7"  type="BackgroundHwy" route="r_forward" depart="3.0" departLane="2" departPos="300" departSpeed="29.0"/>
+  <vehicle id="veh_bg8"  type="BackgroundHwy" route="r_forward" depart="5.0" departLane="2" departPos="200" departSpeed="30.0"/>
+  <vehicle id="veh_bg9"  type="BackgroundHwy" route="r_forward" depart="7.0" departLane="2" departPos="100" departSpeed="28.0"/>
+  <vehicle id="veh_bg10" type="BackgroundHwy" route="r_forward" depart="9.0" departLane="2" departPos="100" departSpeed="29.0"/>
+</routes>

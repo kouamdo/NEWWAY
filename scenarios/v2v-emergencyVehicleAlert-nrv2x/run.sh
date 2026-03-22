@@ -96,7 +96,7 @@ run_ns3 build -j "$JOBS" v2v-emergencyVehicleAlert-nrv2x
 
 rm -f "$NETSTATE_FILE"
 rm -f "$COLLISION_OUTPUT_FILE"
-rm -f "${CSV_PREFIX}"-veh*-CAM.csv "${CSV_PREFIX}"-veh*-MSG.csv "${CSV_PREFIX}"-veh*-CTRL.csv 2>/dev/null || true
+rm -f "${CSV_PREFIX}"-veh*-CAM.csv "${CSV_PREFIX}"-veh*-MSG.csv "${CSV_PREFIX}"-veh*-CTRL.csv "${CSV_PREFIX}"-veh*-PHY.csv 2>/dev/null || true
 
 sumo_collision_args=""
 if [[ -n "$COLLISION_ACTION" ]]; then
@@ -199,6 +199,21 @@ if [[ "$EXPORT_RESULTS" == "1" ]]; then
   fi
   if ! "$PY_BIN" "$ROOT/analysis/scenario_runs/export_results_bundle.py" "${export_args[@]}"; then
     echo "Warning: export bundle generation failed for v2v-emergencyVehicleAlert-nrv2x"
+  fi
+fi
+
+# PHY-level metrics analysis (SINR, SNR, RSSI, RSRP)
+PHY_ANALYSIS="${PHY_ANALYSIS:-1}"
+if [[ "$PHY_ANALYSIS" == "1" ]]; then
+  phy_csvs=("${CSV_PREFIX}"-*-PHY.csv)
+  if [[ -f "${phy_csvs[0]:-}" ]]; then
+    if ! "$PY_BIN" "$ROOT/analysis/scenario_runs/analyze_phy_safety.py" \
+      --run-dir "$OUT_DIR" \
+      --out-dir "$OUT_DIR/artifacts/phy_analysis"; then
+      echo "Warning: PHY analysis failed for v2v-emergencyVehicleAlert-nrv2x"
+    fi
+  else
+    echo "Note: No PHY CSV files found (rebuild with SignalInfo-enabled EVA to enable)"
   fi
 fi
 

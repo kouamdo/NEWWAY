@@ -15,6 +15,7 @@
 #include "ns3/vdpTraci.h"
 #include "ns3/socket.h"
 #include "ns3/random-variable-stream.h"
+#include "ns3/signalInfoUtils.h"
 
 #include "ns3/sumo-sensor.h"
 #include "ns3/LDM.h"
@@ -46,7 +47,7 @@ class emergencyVehicleAlert : public Application
      * \param the ASN.1 CAM structure containing the info of the packet that was received.
      */
     // void receiveCAM (CAM_t *cam, Address from);
-    void receiveCAM (asn1cpp::Seq<CAM> cam, Address from);
+    void receiveCAM (asn1cpp::Seq<CAM> cam, Address from, StationId_t my_stationID, StationType_t my_StationType, SignalInfo phy_info);
 
     /**
      * \brief Callback to handle a DENM reception.
@@ -167,6 +168,7 @@ class emergencyVehicleAlert : public Application
     std::ofstream m_csv_ofstream_cam; //!< CSV log stream (CAM), created using m_csv_name
     std::ofstream m_csv_ofstream_msg; //!< CSV log stream (TX/RX events), created using m_csv_name
     std::ofstream m_csv_ofstream_ctrl; //!< CSV log stream (vehicle control events)
+    std::ofstream m_csv_ofstream_phy; //!< CSV log stream (PHY-level metrics: SINR, RSRP, RSSI, SNR)
 
     /* Counters */
     int m_cam_received;

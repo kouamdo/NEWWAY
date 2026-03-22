@@ -461,7 +461,7 @@ namespace ns3
     m_caService.setSocketTx (m_socket);
     m_caService.setSocketRx (m_socket);
     m_caService.setStationProperties (std::stol(m_id.substr (3)), (long)stationtype);
-    m_caService.addCARxCallback (std::bind(&emergencyVehicleAlert::receiveCAM,this,std::placeholders::_1,std::placeholders::_2));
+    m_caService.addCARxCallbackExtended (std::bind(&emergencyVehicleAlert::receiveCAM,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3,std::placeholders::_4,std::placeholders::_5));
     m_caService.addCATxCallback (std::bind(&emergencyVehicleAlert::logCamTx,this,std::placeholders::_1));
     m_caService.setRealTime (m_real_time);
 
@@ -522,6 +522,8 @@ namespace ns3
       m_csv_ofstream_msg << "vehicle_id,msg_seq,tx_t_s,rx_t_s,rx_ok,msg_type,tx_id,rx_id,cam_gdt_ms,pkt_uid" << std::endl;
       m_csv_ofstream_ctrl.open (m_csv_name+"-"+m_id+"-CTRL.csv",std::ofstream::trunc);
       m_csv_ofstream_ctrl << "time_s,vehicle_id,event_type,source_id,msg_seq,pkt_uid,distance_m,heading_diff_deg,lane_before,lane_after,target_speed_mps" << std::endl;
+      m_csv_ofstream_phy.open (m_csv_name+"-"+m_id+"-PHY.csv",std::ofstream::trunc);
+      m_csv_ofstream_phy << "time_s,vehicle_id,msg_type,tx_id,sinr_dB,snr_dB,rssi_dBm,rsrp_dBm,pkt_size,distance_m,rx_ok" << std::endl;
     }
   }
 
@@ -546,6 +548,10 @@ namespace ns3
       if (m_csv_ofstream_ctrl.is_open ())
         {
           m_csv_ofstream_ctrl.close ();
+        }
+      if (m_csv_ofstream_phy.is_open ())
+        {
+          m_csv_ofstream_phy.close ();
         }
     }
 
@@ -851,16 +857,32 @@ namespace ns3
   }
 
   void
-  emergencyVehicleAlert::receiveCAM (asn1cpp::Seq<CAM> cam, Address from)
+  emergencyVehicleAlert::receiveCAM (asn1cpp::Seq<CAM> cam, Address from,
+                                     StationId_t my_stationID, StationType_t my_StationType,
+                                     SignalInfo phy_info)
   {
     /* Implement CAM strategy here */
    (void) from;
+   (void) my_stationID;
+   (void) my_StationType;
    long tx_id = asn1cpp::getField (cam->header.stationId,long);
    long cam_gdt_ms = asn1cpp::getField (cam->cam.generationDeltaTime,long);
    long rx_id = 0;
    if (m_id.size () > 3)
      {
        rx_id = std::stol(m_id.substr (3));
+     }
+
+   /* Log PHY-level metrics from the NR/WiFi physical layer */
+   double sinr_dB = phy_info.sinr;
+   double snr_dB  = phy_info.snr;
+   double rssi_dBm = phy_info.rssi;
+   double rsrp_dBm = phy_info.rsrp;
+   double pkt_size = phy_info.size;
+   /* Fall back to SNR if SINR is NaN (some radio modules only populate SNR) */
+   if (std::isnan (sinr_dB) && !std::isnan (snr_dB))
+     {
+       sinr_dB = snr_dB;
      }
 
    if (m_rx_drop_prob_cam > 0.0 && m_drop_rv != nullptr && m_drop_rv->GetValue () < m_rx_drop_prob_cam)
@@ -909,6 +931,26 @@ namespace ns3
      {
        m_csv_ofstream_msg << m_id << "," << cam_gdt_ms << ",," << Simulator::Now ().GetSeconds ()
                           << "," << 1 << ",CAM," << tx_id << "," << rx_id << "," << cam_gdt_ms << "," << -1 << std::endl;
+     }
+
+   /* Log PHY-level metrics to dedicated PHY CSV */
+   if (!m_csv_name.empty () && m_csv_ofstream_phy.is_open ())
+     {
+       double dist_m = -1.0;
+       /* Compute distance to transmitter if possible */
+       double txLat = asn1cpp::getField(cam->cam.camParameters.basicContainer.referencePosition.latitude,double)/DOT_ONE_MICRO;
+       double txLon = asn1cpp::getField(cam->cam.camParameters.basicContainer.referencePosition.longitude,double)/DOT_ONE_MICRO;
+       if (txLat != 0.0 && txLon != 0.0)
+         {
+           libsumo::TraCIPosition myPos = m_client->TraCIAPI::vehicle.getPosition(m_id);
+           myPos = m_client->TraCIAPI::simulation.convertXYtoLonLat(myPos.x, myPos.y);
+           dist_m = appUtil_haversineDist(myPos.y, myPos.x, txLat, txLon);
+         }
+       m_csv_ofstream_phy << Simulator::Now ().GetSeconds () << ","
+                          << m_id << ",CAM," << tx_id << ","
+                          << sinr_dB << "," << snr_dB << ","
+                          << rssi_dBm << "," << rsrp_dBm << ","
+                          << pkt_size << "," << dist_m << ",1" << std::endl;
      }
 
   }
