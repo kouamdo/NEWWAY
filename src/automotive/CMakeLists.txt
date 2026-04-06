@@ -9,8 +9,8 @@ Set(source_files
     helper/areaSpeedAdvisorClientLTE-helper.cc
     helper/areaSpeedAdvisorServerLTE-helper.cc
     helper/emergencyVehicleAlert-helper.cc
-    helper/v2xEmulator-helper.cc
-    helper/simpleCAMSender-helper.cc
+#     helper/v2xEmulator-helper.cc
+#     helper/simpleCAMSender-helper.cc
     helper/simpleVAMSender-helper.cc
     helper/emergencyVehicleWarningServer80211p-helper.cc
     helper/emergencyVehicleWarningClient80211p-helper.cc
@@ -28,7 +28,7 @@ Set(source_files
     model/Applications/areaSpeedAdvisorServer80211p.cc
     model/Applications/areaSpeedAdvisorClientLTE.cc
     model/Applications/areaSpeedAdvisorServerLTE.cc
-    model/Applications/simpleCAMSender-gps-tc.cc
+#     model/Applications/simpleCAMSender-gps-tc.cc
     model/Applications/simpleVAMSender-gps-tc.cc
     model/Applications/trafficManagerClient80211p.cc
     model/Applications/trafficManagerServer80211p.cc
@@ -48,7 +48,7 @@ Set(source_files
     model/Facilities/vrudpGPSTraceClient.cc
     model/Facilities/caBasicService.cc
     model/utilities/sumo_xml_parser.cc
-    model/Applications/v2xEmulator.cc
+#     model/Applications/v2xEmulator.cc
     model/Measurements/MetricSupervisor.cc
         model/Facilities/ividata.cc
     model/Facilities/iviService.cc
@@ -1332,8 +1332,8 @@ set(header_files
     helper/areaSpeedAdvisorClient80211p-helper.h
     helper/areaSpeedAdvisorServer80211p-helper.h
     helper/emergencyVehicleAlert-helper.h
-    helper/v2xEmulator-helper.h
-    helper/simpleCAMSender-helper.h
+#     helper/v2xEmulator-helper.h
+#     helper/simpleCAMSender-helper.h
     helper/simpleVAMSender-helper.h
 
      helper/cooperativePerception-helper.h
@@ -1347,7 +1347,7 @@ set(header_files
     model/Applications/areaSpeedAdvisorClientLTE.h
     model/Applications/areaSpeedAdvisorServerLTE.h
     model/Applications/emergencyVehicleAlert.h
-    model/Applications/simpleCAMSender-gps-tc.h
+#     model/Applications/simpleCAMSender-gps-tc.h
     model/Applications/simpleVAMSender-gps-tc.h
 
     model/Facilities/denBasicService.h
@@ -1399,7 +1399,7 @@ set(header_files
     # BTP
     model/BTP/btp.h
     model/BTP/btpHeader.h
-    model/BTP/simple-btp-application.h
+#     model/BTP/simple-btp-application.h
     model/BTP/btpdatarequest.h
 
     #GeoNet

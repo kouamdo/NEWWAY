@@ -1,14 +1,22 @@
-find_package(protobuf REQUIRED)
-include_directories(${Protobuf_INCLUDE_DIRS})
-link_libraries(${Protobuf_LIBRARIES})
+find_package(Protobuf QUIET)
+if(Protobuf_FOUND)
+  include_directories(${Protobuf_INCLUDE_DIRS})
+  set(CARLA_PROTOBUF_LIBS ${Protobuf_LIBRARIES})
+else()
+  find_library(CARLA_PROTOBUF_LIB protobuf REQUIRED)
+  set(CARLA_PROTOBUF_LIBS ${CARLA_PROTOBUF_LIB})
+endif()
 
-find_package(gRPC CONFIG REQUIRED)
-include_directories(${gRPC_INCLUDE_DIRS})
-link_libraries(${gRPC_LIBRARIES})
+find_package(gRPC QUIET CONFIG)
+if(TARGET gRPC::grpc AND TARGET gRPC::grpc++)
+  set(CARLA_GRPC_LIBS gRPC::grpc gRPC::grpc++)
+else()
+  find_library(CARLA_GRPC_LIB grpc REQUIRED)
+  find_library(CARLA_GRPPCPP_LIB grpc++ REQUIRED)
+  set(CARLA_GRPC_LIBS ${CARLA_GRPC_LIB} ${CARLA_GRPPCPP_LIB})
+endif()
 
-link_libraries (protobuf::libprotobuf
-    gRPC::grpc
-    gRPC::grpc++)
+link_libraries(${CARLA_PROTOBUF_LIBS} ${CARLA_GRPC_LIBS})
 
 set(source_files
     model/OpenCDAClient.cc
@@ -31,10 +39,10 @@ build_lib(
   SOURCE_FILES ${source_files}
   HEADER_FILES ${header_files}
   LIBRARIES_TO_LINK
-    ${protobuf}
+    ${CARLA_PROTOBUF_LIBS}
+    ${CARLA_GRPC_LIBS}
     ${libcore}
     ${libmobility}
     ${libinternet}
   TEST_SOURCES ${test_sources}
 )
-

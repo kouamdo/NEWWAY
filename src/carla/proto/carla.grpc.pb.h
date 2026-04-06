@@ -29,23 +29,24 @@
 #include "carla.pb.h"
 
 #include <functional>
-#include <grpcpp/generic/async_generic_service.h>
-#include <grpcpp/support/async_stream.h>
-#include <grpcpp/support/async_unary_call.h>
-#include <grpcpp/support/client_callback.h>
-#include <grpcpp/client_context.h>
-#include <grpcpp/completion_queue.h>
-#include <grpcpp/support/message_allocator.h>
-#include <grpcpp/support/method_handler.h>
-#include <grpcpp/impl/proto_utils.h>
-#include <grpcpp/impl/rpc_method.h>
-#include <grpcpp/support/server_callback.h>
-#include <grpcpp/impl/server_callback_handlers.h>
-#include <grpcpp/server_context.h>
-#include <grpcpp/impl/service_type.h>
-#include <grpcpp/support/status.h>
-#include <grpcpp/support/stub_options.h>
-#include <grpcpp/support/sync_stream.h>
+#include <grpc/impl/codegen/port_platform.h>
+#include <grpcpp/impl/codegen/async_generic_service.h>
+#include <grpcpp/impl/codegen/async_stream.h>
+#include <grpcpp/impl/codegen/async_unary_call.h>
+#include <grpcpp/impl/codegen/client_callback.h>
+#include <grpcpp/impl/codegen/client_context.h>
+#include <grpcpp/impl/codegen/completion_queue.h>
+#include <grpcpp/impl/codegen/message_allocator.h>
+#include <grpcpp/impl/codegen/method_handler.h>
+#include <grpcpp/impl/codegen/proto_utils.h>
+#include <grpcpp/impl/codegen/rpc_method.h>
+#include <grpcpp/impl/codegen/server_callback.h>
+#include <grpcpp/impl/codegen/server_callback_handlers.h>
+#include <grpcpp/impl/codegen/server_context.h>
+#include <grpcpp/impl/codegen/service_type.h>
+#include <grpcpp/impl/codegen/status.h>
+#include <grpcpp/impl/codegen/stub_options.h>
+#include <grpcpp/impl/codegen/sync_stream.h>
 
 namespace carla {
 
@@ -183,50 +184,234 @@ class CarlaAdapter final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::carla::DoubleValue>> PrepareAsyncGetGTaccuracy(::grpc::ClientContext* context, const ::carla::ObjectMinimal& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::carla::DoubleValue>>(PrepareAsyncGetGTaccuracyRaw(context, request, cq));
     }
-    class async_interface {
+    class experimental_async_interface {
      public:
-      virtual ~async_interface() {}
+      virtual ~experimental_async_interface() {}
       virtual void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Boolean* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Boolean* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Boolean* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void Finish(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void Finish(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void Finish(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void Finish(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void Finish(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void Finish(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void GetManagedActorsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void GetManagedActorsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void GetManagedActorsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetManagedActorsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void GetManagedActorsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetManagedActorsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void GetManagedCAVsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void GetManagedCAVsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void GetManagedCAVsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetManagedCAVsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void GetManagedCAVsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetManagedCAVsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void GetManagedActorById(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Vehicle* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void GetManagedActorById(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vehicle* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void GetManagedActorById(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Vehicle* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetManagedActorById(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Vehicle* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void GetManagedActorById(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vehicle* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetManagedActorById(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vehicle* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void InsertVehicle(::grpc::ClientContext* context, const ::carla::Vehicle* request, ::carla::Number* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void InsertVehicle(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void InsertVehicle(::grpc::ClientContext* context, const ::carla::Vehicle* request, ::carla::Number* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void InsertVehicle(::grpc::ClientContext* context, const ::carla::Vehicle* request, ::carla::Number* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void InsertVehicle(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void InsertVehicle(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Transform* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Transform* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Transform* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Transform* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Transform* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Transform* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void GetActorLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Objects* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void GetActorLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Objects* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void GetActorLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Objects* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetActorLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Objects* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void GetActorLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Objects* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetActorLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Objects* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void InsertObject(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::Number* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void InsertObject(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void InsertObject(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::Number* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void InsertObject(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::Number* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void InsertObject(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void InsertObject(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void InsertObjects(::grpc::ClientContext* context, const ::carla::ObjectsIn* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void InsertObjects(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void InsertObjects(::grpc::ClientContext* context, const ::carla::ObjectsIn* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void InsertObjects(::grpc::ClientContext* context, const ::carla::ObjectsIn* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void InsertObjects(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void InsertObjects(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void InsertCV(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void InsertCV(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void InsertCV(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void InsertCV(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void InsertCV(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void InsertCV(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void GetCartesian(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void GetCartesian(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void GetCartesian(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetCartesian(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void GetCartesian(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetCartesian(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void GetGeo(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void GetGeo(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void GetGeo(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetGeo(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void GetGeo(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetGeo(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void hasLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Boolean* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void hasLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void hasLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Boolean* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void hasLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Boolean* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void hasLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void hasLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void SetControl(::grpc::ClientContext* context, const ::carla::Control* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void SetControl(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void SetControl(::grpc::ClientContext* context, const ::carla::Control* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetControl(::grpc::ClientContext* context, const ::carla::Control* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetControl(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetControl(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void GetCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void GetCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void GetCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void GetCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void GetGTaccuracy(::grpc::ClientContext* context, const ::carla::ObjectMinimal* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void GetGTaccuracy(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void GetGTaccuracy(::grpc::ClientContext* context, const ::carla::ObjectMinimal* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetGTaccuracy(::grpc::ClientContext* context, const ::carla::ObjectMinimal* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void GetGTaccuracy(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void GetGTaccuracy(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
     };
-    typedef class async_interface experimental_async_interface;
-    virtual class async_interface* async() { return nullptr; }
-    class async_interface* experimental_async() { return async(); }
-   private:
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    typedef class experimental_async_interface async_interface;
+    #endif
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    async_interface* async() { return experimental_async(); }
+    #endif
+    virtual class experimental_async_interface* experimental_async() { return nullptr; }
+  private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::carla::Boolean>* AsyncExecuteOneTimeStepRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::carla::Boolean>* PrepareAsyncExecuteOneTimeStepRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::google::protobuf::Empty>* AsyncFinishRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) = 0;
@@ -266,7 +451,7 @@ class CarlaAdapter final {
   };
   class Stub final : public StubInterface {
    public:
-    Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
+    Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
     ::grpc::Status ExecuteOneTimeStep(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::carla::Boolean* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::carla::Boolean>> AsyncExecuteOneTimeStep(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::carla::Boolean>>(AsyncExecuteOneTimeStepRaw(context, request, cq));
@@ -393,56 +578,236 @@ class CarlaAdapter final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::carla::DoubleValue>> PrepareAsyncGetGTaccuracy(::grpc::ClientContext* context, const ::carla::ObjectMinimal& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::carla::DoubleValue>>(PrepareAsyncGetGTaccuracyRaw(context, request, cq));
     }
-    class async final :
-      public StubInterface::async_interface {
+    class experimental_async final :
+      public StubInterface::experimental_async_interface {
      public:
       void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Boolean* response, std::function<void(::grpc::Status)>) override;
+      void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Boolean* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Boolean* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void ExecuteOneTimeStep(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void Finish(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) override;
+      void Finish(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void Finish(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void Finish(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void Finish(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void Finish(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void GetManagedActorsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, std::function<void(::grpc::Status)>) override;
+      void GetManagedActorsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void GetManagedActorsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetManagedActorsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void GetManagedActorsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetManagedActorsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void GetManagedCAVsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, std::function<void(::grpc::Status)>) override;
+      void GetManagedCAVsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void GetManagedCAVsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetManagedCAVsIds(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void GetManagedCAVsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetManagedCAVsIds(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::ActorIds* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void GetManagedActorById(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Vehicle* response, std::function<void(::grpc::Status)>) override;
+      void GetManagedActorById(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vehicle* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void GetManagedActorById(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Vehicle* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetManagedActorById(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Vehicle* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void GetManagedActorById(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vehicle* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetManagedActorById(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vehicle* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void InsertVehicle(::grpc::ClientContext* context, const ::carla::Vehicle* request, ::carla::Number* response, std::function<void(::grpc::Status)>) override;
+      void InsertVehicle(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void InsertVehicle(::grpc::ClientContext* context, const ::carla::Vehicle* request, ::carla::Number* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void InsertVehicle(::grpc::ClientContext* context, const ::carla::Vehicle* request, ::carla::Number* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void InsertVehicle(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void InsertVehicle(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Transform* response, std::function<void(::grpc::Status)>) override;
+      void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Transform* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Transform* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::google::protobuf::Empty* request, ::carla::Transform* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Transform* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetRandomSpawnPoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Transform* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void GetActorLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Objects* response, std::function<void(::grpc::Status)>) override;
+      void GetActorLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Objects* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void GetActorLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Objects* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetActorLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Objects* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void GetActorLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Objects* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetActorLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Objects* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void InsertObject(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::Number* response, std::function<void(::grpc::Status)>) override;
+      void InsertObject(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void InsertObject(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::Number* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void InsertObject(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::Number* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void InsertObject(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void InsertObject(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Number* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void InsertObjects(::grpc::ClientContext* context, const ::carla::ObjectsIn* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) override;
+      void InsertObjects(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void InsertObjects(::grpc::ClientContext* context, const ::carla::ObjectsIn* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void InsertObjects(::grpc::ClientContext* context, const ::carla::ObjectsIn* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void InsertObjects(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void InsertObjects(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void InsertCV(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) override;
+      void InsertCV(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void InsertCV(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void InsertCV(::grpc::ClientContext* context, const ::carla::ObjectIn* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void InsertCV(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void InsertCV(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void GetCartesian(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, std::function<void(::grpc::Status)>) override;
+      void GetCartesian(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void GetCartesian(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetCartesian(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void GetCartesian(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetCartesian(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void GetGeo(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, std::function<void(::grpc::Status)>) override;
+      void GetGeo(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void GetGeo(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetGeo(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Vector* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void GetGeo(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetGeo(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Vector* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void hasLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Boolean* response, std::function<void(::grpc::Status)>) override;
+      void hasLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void hasLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Boolean* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void hasLDM(::grpc::ClientContext* context, const ::carla::Number* request, ::carla::Boolean* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void hasLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void hasLDM(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Boolean* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void SetControl(::grpc::ClientContext* context, const ::carla::Control* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) override;
+      void SetControl(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void SetControl(::grpc::ClientContext* context, const ::carla::Control* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetControl(::grpc::ClientContext* context, const ::carla::Control* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetControl(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetControl(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::google::protobuf::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void GetCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, std::function<void(::grpc::Status)>) override;
+      void GetCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void GetCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void GetCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, std::function<void(::grpc::Status)>) override;
+      void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::carla::Vector* request, ::carla::Waypoint* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetNextCarlaWaypoint(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::Waypoint* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void GetGTaccuracy(::grpc::ClientContext* context, const ::carla::ObjectMinimal* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) override;
+      void GetGTaccuracy(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void GetGTaccuracy(::grpc::ClientContext* context, const ::carla::ObjectMinimal* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetGTaccuracy(::grpc::ClientContext* context, const ::carla::ObjectMinimal* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void GetGTaccuracy(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void GetGTaccuracy(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::carla::DoubleValue* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
      private:
       friend class Stub;
-      explicit async(Stub* stub): stub_(stub) { }
+      explicit experimental_async(Stub* stub): stub_(stub) { }
       Stub* stub() { return stub_; }
       Stub* stub_;
     };
-    class async* async() override { return &async_stub_; }
+    class experimental_async_interface* experimental_async() override { return &async_stub_; }
 
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
-    class async async_stub_{this};
+    class experimental_async async_stub_{this};
     ::grpc::ClientAsyncResponseReader< ::carla::Boolean>* AsyncExecuteOneTimeStepRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::carla::Boolean>* PrepareAsyncExecuteOneTimeStepRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::google::protobuf::Empty>* AsyncFinishRaw(::grpc::ClientContext* context, const ::google::protobuf::Empty& request, ::grpc::CompletionQueue* cq) override;
@@ -885,22 +1250,36 @@ class CarlaAdapter final {
   };
   typedef WithAsyncMethod_ExecuteOneTimeStep<WithAsyncMethod_Finish<WithAsyncMethod_GetManagedActorsIds<WithAsyncMethod_GetManagedCAVsIds<WithAsyncMethod_GetManagedActorById<WithAsyncMethod_InsertVehicle<WithAsyncMethod_GetRandomSpawnPoint<WithAsyncMethod_GetActorLDM<WithAsyncMethod_InsertObject<WithAsyncMethod_InsertObjects<WithAsyncMethod_InsertCV<WithAsyncMethod_GetCartesian<WithAsyncMethod_GetGeo<WithAsyncMethod_hasLDM<WithAsyncMethod_SetControl<WithAsyncMethod_GetCarlaWaypoint<WithAsyncMethod_GetNextCarlaWaypoint<WithAsyncMethod_GetGTaccuracy<Service > > > > > > > > > > > > > > > > > > AsyncService;
   template <class BaseClass>
-  class WithCallbackMethod_ExecuteOneTimeStep : public BaseClass {
+  class ExperimentalWithCallbackMethod_ExecuteOneTimeStep : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_ExecuteOneTimeStep() {
-      ::grpc::Service::MarkMethodCallback(0,
-          new ::grpc::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::Boolean>(
+    ExperimentalWithCallbackMethod_ExecuteOneTimeStep() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(0,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::Boolean>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::google::protobuf::Empty* request, ::carla::Boolean* response) { return this->ExecuteOneTimeStep(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::google::protobuf::Empty* request, ::carla::Boolean* response) { return this->ExecuteOneTimeStep(context, request, response); }));}
     void SetMessageAllocatorFor_ExecuteOneTimeStep(
-        ::grpc::MessageAllocator< ::google::protobuf::Empty, ::carla::Boolean>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::google::protobuf::Empty, ::carla::Boolean>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::Boolean>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(0);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::Boolean>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_ExecuteOneTimeStep() override {
+    ~ExperimentalWithCallbackMethod_ExecuteOneTimeStep() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -908,26 +1287,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* ExecuteOneTimeStep(
-      ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::Boolean* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::Boolean* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* ExecuteOneTimeStep(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::Boolean* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_Finish : public BaseClass {
+  class ExperimentalWithCallbackMethod_Finish : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_Finish() {
-      ::grpc::Service::MarkMethodCallback(1,
-          new ::grpc::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::google::protobuf::Empty>(
+    ExperimentalWithCallbackMethod_Finish() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(1,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::google::protobuf::Empty>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::google::protobuf::Empty* request, ::google::protobuf::Empty* response) { return this->Finish(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::google::protobuf::Empty* request, ::google::protobuf::Empty* response) { return this->Finish(context, request, response); }));}
     void SetMessageAllocatorFor_Finish(
-        ::grpc::MessageAllocator< ::google::protobuf::Empty, ::google::protobuf::Empty>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::google::protobuf::Empty, ::google::protobuf::Empty>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::google::protobuf::Empty>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(1);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::google::protobuf::Empty>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_Finish() override {
+    ~ExperimentalWithCallbackMethod_Finish() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -935,26 +1334,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* Finish(
-      ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::google::protobuf::Empty* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::google::protobuf::Empty* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* Finish(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::google::protobuf::Empty* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_GetManagedActorsIds : public BaseClass {
+  class ExperimentalWithCallbackMethod_GetManagedActorsIds : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_GetManagedActorsIds() {
-      ::grpc::Service::MarkMethodCallback(2,
-          new ::grpc::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::ActorIds>(
+    ExperimentalWithCallbackMethod_GetManagedActorsIds() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(2,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::ActorIds>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response) { return this->GetManagedActorsIds(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response) { return this->GetManagedActorsIds(context, request, response); }));}
     void SetMessageAllocatorFor_GetManagedActorsIds(
-        ::grpc::MessageAllocator< ::google::protobuf::Empty, ::carla::ActorIds>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::google::protobuf::Empty, ::carla::ActorIds>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::ActorIds>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(2);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::ActorIds>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_GetManagedActorsIds() override {
+    ~ExperimentalWithCallbackMethod_GetManagedActorsIds() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -962,26 +1381,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetManagedActorsIds(
-      ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::ActorIds* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::ActorIds* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetManagedActorsIds(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::ActorIds* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_GetManagedCAVsIds : public BaseClass {
+  class ExperimentalWithCallbackMethod_GetManagedCAVsIds : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_GetManagedCAVsIds() {
-      ::grpc::Service::MarkMethodCallback(3,
-          new ::grpc::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::ActorIds>(
+    ExperimentalWithCallbackMethod_GetManagedCAVsIds() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(3,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::ActorIds>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response) { return this->GetManagedCAVsIds(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::google::protobuf::Empty* request, ::carla::ActorIds* response) { return this->GetManagedCAVsIds(context, request, response); }));}
     void SetMessageAllocatorFor_GetManagedCAVsIds(
-        ::grpc::MessageAllocator< ::google::protobuf::Empty, ::carla::ActorIds>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::google::protobuf::Empty, ::carla::ActorIds>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::ActorIds>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(3);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::ActorIds>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_GetManagedCAVsIds() override {
+    ~ExperimentalWithCallbackMethod_GetManagedCAVsIds() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -989,26 +1428,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetManagedCAVsIds(
-      ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::ActorIds* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::ActorIds* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetManagedCAVsIds(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::ActorIds* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_GetManagedActorById : public BaseClass {
+  class ExperimentalWithCallbackMethod_GetManagedActorById : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_GetManagedActorById() {
-      ::grpc::Service::MarkMethodCallback(4,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Vehicle>(
+    ExperimentalWithCallbackMethod_GetManagedActorById() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(4,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Vehicle>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::Number* request, ::carla::Vehicle* response) { return this->GetManagedActorById(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::Number* request, ::carla::Vehicle* response) { return this->GetManagedActorById(context, request, response); }));}
     void SetMessageAllocatorFor_GetManagedActorById(
-        ::grpc::MessageAllocator< ::carla::Number, ::carla::Vehicle>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::Number, ::carla::Vehicle>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(4);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Vehicle>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(4);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Vehicle>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_GetManagedActorById() override {
+    ~ExperimentalWithCallbackMethod_GetManagedActorById() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1016,26 +1475,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetManagedActorById(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::Number* /*request*/, ::carla::Vehicle* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::Number* /*request*/, ::carla::Vehicle* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetManagedActorById(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::Number* /*request*/, ::carla::Vehicle* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_InsertVehicle : public BaseClass {
+  class ExperimentalWithCallbackMethod_InsertVehicle : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_InsertVehicle() {
-      ::grpc::Service::MarkMethodCallback(5,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::Vehicle, ::carla::Number>(
+    ExperimentalWithCallbackMethod_InsertVehicle() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(5,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::Vehicle, ::carla::Number>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::Vehicle* request, ::carla::Number* response) { return this->InsertVehicle(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::Vehicle* request, ::carla::Number* response) { return this->InsertVehicle(context, request, response); }));}
     void SetMessageAllocatorFor_InsertVehicle(
-        ::grpc::MessageAllocator< ::carla::Vehicle, ::carla::Number>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::Vehicle, ::carla::Number>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(5);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::Vehicle, ::carla::Number>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(5);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::Vehicle, ::carla::Number>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_InsertVehicle() override {
+    ~ExperimentalWithCallbackMethod_InsertVehicle() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1043,26 +1522,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* InsertVehicle(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::Vehicle* /*request*/, ::carla::Number* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::Vehicle* /*request*/, ::carla::Number* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* InsertVehicle(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::Vehicle* /*request*/, ::carla::Number* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_GetRandomSpawnPoint : public BaseClass {
+  class ExperimentalWithCallbackMethod_GetRandomSpawnPoint : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_GetRandomSpawnPoint() {
-      ::grpc::Service::MarkMethodCallback(6,
-          new ::grpc::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::Transform>(
+    ExperimentalWithCallbackMethod_GetRandomSpawnPoint() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(6,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::Transform>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::google::protobuf::Empty* request, ::carla::Transform* response) { return this->GetRandomSpawnPoint(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::google::protobuf::Empty* request, ::carla::Transform* response) { return this->GetRandomSpawnPoint(context, request, response); }));}
     void SetMessageAllocatorFor_GetRandomSpawnPoint(
-        ::grpc::MessageAllocator< ::google::protobuf::Empty, ::carla::Transform>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::google::protobuf::Empty, ::carla::Transform>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(6);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::Transform>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(6);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::google::protobuf::Empty, ::carla::Transform>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_GetRandomSpawnPoint() override {
+    ~ExperimentalWithCallbackMethod_GetRandomSpawnPoint() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1070,26 +1569,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetRandomSpawnPoint(
-      ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::Transform* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::Transform* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetRandomSpawnPoint(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::google::protobuf::Empty* /*request*/, ::carla::Transform* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_GetActorLDM : public BaseClass {
+  class ExperimentalWithCallbackMethod_GetActorLDM : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_GetActorLDM() {
-      ::grpc::Service::MarkMethodCallback(7,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Objects>(
+    ExperimentalWithCallbackMethod_GetActorLDM() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(7,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Objects>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::Number* request, ::carla::Objects* response) { return this->GetActorLDM(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::Number* request, ::carla::Objects* response) { return this->GetActorLDM(context, request, response); }));}
     void SetMessageAllocatorFor_GetActorLDM(
-        ::grpc::MessageAllocator< ::carla::Number, ::carla::Objects>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::Number, ::carla::Objects>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(7);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Objects>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(7);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Objects>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_GetActorLDM() override {
+    ~ExperimentalWithCallbackMethod_GetActorLDM() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1097,26 +1616,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetActorLDM(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::Number* /*request*/, ::carla::Objects* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::Number* /*request*/, ::carla::Objects* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetActorLDM(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::Number* /*request*/, ::carla::Objects* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_InsertObject : public BaseClass {
+  class ExperimentalWithCallbackMethod_InsertObject : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_InsertObject() {
-      ::grpc::Service::MarkMethodCallback(8,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::ObjectIn, ::carla::Number>(
+    ExperimentalWithCallbackMethod_InsertObject() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(8,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::ObjectIn, ::carla::Number>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::ObjectIn* request, ::carla::Number* response) { return this->InsertObject(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::ObjectIn* request, ::carla::Number* response) { return this->InsertObject(context, request, response); }));}
     void SetMessageAllocatorFor_InsertObject(
-        ::grpc::MessageAllocator< ::carla::ObjectIn, ::carla::Number>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::ObjectIn, ::carla::Number>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(8);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::ObjectIn, ::carla::Number>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(8);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::ObjectIn, ::carla::Number>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_InsertObject() override {
+    ~ExperimentalWithCallbackMethod_InsertObject() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1124,26 +1663,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* InsertObject(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::ObjectIn* /*request*/, ::carla::Number* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::ObjectIn* /*request*/, ::carla::Number* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* InsertObject(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::ObjectIn* /*request*/, ::carla::Number* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_InsertObjects : public BaseClass {
+  class ExperimentalWithCallbackMethod_InsertObjects : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_InsertObjects() {
-      ::grpc::Service::MarkMethodCallback(9,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::ObjectsIn, ::carla::DoubleValue>(
+    ExperimentalWithCallbackMethod_InsertObjects() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(9,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::ObjectsIn, ::carla::DoubleValue>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::ObjectsIn* request, ::carla::DoubleValue* response) { return this->InsertObjects(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::ObjectsIn* request, ::carla::DoubleValue* response) { return this->InsertObjects(context, request, response); }));}
     void SetMessageAllocatorFor_InsertObjects(
-        ::grpc::MessageAllocator< ::carla::ObjectsIn, ::carla::DoubleValue>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::ObjectsIn, ::carla::DoubleValue>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(9);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::ObjectsIn, ::carla::DoubleValue>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(9);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::ObjectsIn, ::carla::DoubleValue>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_InsertObjects() override {
+    ~ExperimentalWithCallbackMethod_InsertObjects() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1151,26 +1710,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* InsertObjects(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::ObjectsIn* /*request*/, ::carla::DoubleValue* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::ObjectsIn* /*request*/, ::carla::DoubleValue* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* InsertObjects(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::ObjectsIn* /*request*/, ::carla::DoubleValue* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_InsertCV : public BaseClass {
+  class ExperimentalWithCallbackMethod_InsertCV : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_InsertCV() {
-      ::grpc::Service::MarkMethodCallback(10,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::ObjectIn, ::carla::DoubleValue>(
+    ExperimentalWithCallbackMethod_InsertCV() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(10,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::ObjectIn, ::carla::DoubleValue>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::ObjectIn* request, ::carla::DoubleValue* response) { return this->InsertCV(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::ObjectIn* request, ::carla::DoubleValue* response) { return this->InsertCV(context, request, response); }));}
     void SetMessageAllocatorFor_InsertCV(
-        ::grpc::MessageAllocator< ::carla::ObjectIn, ::carla::DoubleValue>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::ObjectIn, ::carla::DoubleValue>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(10);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::ObjectIn, ::carla::DoubleValue>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(10);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::ObjectIn, ::carla::DoubleValue>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_InsertCV() override {
+    ~ExperimentalWithCallbackMethod_InsertCV() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1178,26 +1757,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* InsertCV(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::ObjectIn* /*request*/, ::carla::DoubleValue* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::ObjectIn* /*request*/, ::carla::DoubleValue* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* InsertCV(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::ObjectIn* /*request*/, ::carla::DoubleValue* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_GetCartesian : public BaseClass {
+  class ExperimentalWithCallbackMethod_GetCartesian : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_GetCartesian() {
-      ::grpc::Service::MarkMethodCallback(11,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Vector>(
+    ExperimentalWithCallbackMethod_GetCartesian() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(11,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Vector>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::Vector* request, ::carla::Vector* response) { return this->GetCartesian(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::Vector* request, ::carla::Vector* response) { return this->GetCartesian(context, request, response); }));}
     void SetMessageAllocatorFor_GetCartesian(
-        ::grpc::MessageAllocator< ::carla::Vector, ::carla::Vector>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::Vector, ::carla::Vector>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(11);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Vector>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(11);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Vector>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_GetCartesian() override {
+    ~ExperimentalWithCallbackMethod_GetCartesian() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1205,26 +1804,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetCartesian(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Vector* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Vector* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetCartesian(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Vector* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_GetGeo : public BaseClass {
+  class ExperimentalWithCallbackMethod_GetGeo : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_GetGeo() {
-      ::grpc::Service::MarkMethodCallback(12,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Vector>(
+    ExperimentalWithCallbackMethod_GetGeo() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(12,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Vector>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::Vector* request, ::carla::Vector* response) { return this->GetGeo(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::Vector* request, ::carla::Vector* response) { return this->GetGeo(context, request, response); }));}
     void SetMessageAllocatorFor_GetGeo(
-        ::grpc::MessageAllocator< ::carla::Vector, ::carla::Vector>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::Vector, ::carla::Vector>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(12);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Vector>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(12);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Vector>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_GetGeo() override {
+    ~ExperimentalWithCallbackMethod_GetGeo() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1232,26 +1851,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetGeo(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Vector* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Vector* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetGeo(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Vector* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_hasLDM : public BaseClass {
+  class ExperimentalWithCallbackMethod_hasLDM : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_hasLDM() {
-      ::grpc::Service::MarkMethodCallback(13,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Boolean>(
+    ExperimentalWithCallbackMethod_hasLDM() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(13,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Boolean>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::Number* request, ::carla::Boolean* response) { return this->hasLDM(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::Number* request, ::carla::Boolean* response) { return this->hasLDM(context, request, response); }));}
     void SetMessageAllocatorFor_hasLDM(
-        ::grpc::MessageAllocator< ::carla::Number, ::carla::Boolean>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::Number, ::carla::Boolean>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(13);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Boolean>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(13);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::Number, ::carla::Boolean>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_hasLDM() override {
+    ~ExperimentalWithCallbackMethod_hasLDM() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1259,26 +1898,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* hasLDM(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::Number* /*request*/, ::carla::Boolean* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::Number* /*request*/, ::carla::Boolean* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* hasLDM(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::Number* /*request*/, ::carla::Boolean* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_SetControl : public BaseClass {
+  class ExperimentalWithCallbackMethod_SetControl : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_SetControl() {
-      ::grpc::Service::MarkMethodCallback(14,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::Control, ::google::protobuf::Empty>(
+    ExperimentalWithCallbackMethod_SetControl() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(14,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::Control, ::google::protobuf::Empty>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::Control* request, ::google::protobuf::Empty* response) { return this->SetControl(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::Control* request, ::google::protobuf::Empty* response) { return this->SetControl(context, request, response); }));}
     void SetMessageAllocatorFor_SetControl(
-        ::grpc::MessageAllocator< ::carla::Control, ::google::protobuf::Empty>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::Control, ::google::protobuf::Empty>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(14);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::Control, ::google::protobuf::Empty>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(14);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::Control, ::google::protobuf::Empty>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_SetControl() override {
+    ~ExperimentalWithCallbackMethod_SetControl() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1286,26 +1945,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* SetControl(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::Control* /*request*/, ::google::protobuf::Empty* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::Control* /*request*/, ::google::protobuf::Empty* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetControl(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::Control* /*request*/, ::google::protobuf::Empty* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_GetCarlaWaypoint : public BaseClass {
+  class ExperimentalWithCallbackMethod_GetCarlaWaypoint : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_GetCarlaWaypoint() {
-      ::grpc::Service::MarkMethodCallback(15,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Waypoint>(
+    ExperimentalWithCallbackMethod_GetCarlaWaypoint() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(15,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Waypoint>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::Vector* request, ::carla::Waypoint* response) { return this->GetCarlaWaypoint(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::Vector* request, ::carla::Waypoint* response) { return this->GetCarlaWaypoint(context, request, response); }));}
     void SetMessageAllocatorFor_GetCarlaWaypoint(
-        ::grpc::MessageAllocator< ::carla::Vector, ::carla::Waypoint>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::Vector, ::carla::Waypoint>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(15);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Waypoint>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(15);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Waypoint>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_GetCarlaWaypoint() override {
+    ~ExperimentalWithCallbackMethod_GetCarlaWaypoint() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1313,26 +1992,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetCarlaWaypoint(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Waypoint* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Waypoint* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetCarlaWaypoint(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Waypoint* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_GetNextCarlaWaypoint : public BaseClass {
+  class ExperimentalWithCallbackMethod_GetNextCarlaWaypoint : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_GetNextCarlaWaypoint() {
-      ::grpc::Service::MarkMethodCallback(16,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Waypoint>(
+    ExperimentalWithCallbackMethod_GetNextCarlaWaypoint() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(16,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Waypoint>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::Vector* request, ::carla::Waypoint* response) { return this->GetNextCarlaWaypoint(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::Vector* request, ::carla::Waypoint* response) { return this->GetNextCarlaWaypoint(context, request, response); }));}
     void SetMessageAllocatorFor_GetNextCarlaWaypoint(
-        ::grpc::MessageAllocator< ::carla::Vector, ::carla::Waypoint>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::Vector, ::carla::Waypoint>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(16);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Waypoint>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(16);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::Vector, ::carla::Waypoint>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_GetNextCarlaWaypoint() override {
+    ~ExperimentalWithCallbackMethod_GetNextCarlaWaypoint() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1340,26 +2039,46 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetNextCarlaWaypoint(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Waypoint* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Waypoint* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetNextCarlaWaypoint(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::Vector* /*request*/, ::carla::Waypoint* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithCallbackMethod_GetGTaccuracy : public BaseClass {
+  class ExperimentalWithCallbackMethod_GetGTaccuracy : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithCallbackMethod_GetGTaccuracy() {
-      ::grpc::Service::MarkMethodCallback(17,
-          new ::grpc::internal::CallbackUnaryHandler< ::carla::ObjectMinimal, ::carla::DoubleValue>(
+    ExperimentalWithCallbackMethod_GetGTaccuracy() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(17,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::carla::ObjectMinimal, ::carla::DoubleValue>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::carla::ObjectMinimal* request, ::carla::DoubleValue* response) { return this->GetGTaccuracy(context, request, response); }));}
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::carla::ObjectMinimal* request, ::carla::DoubleValue* response) { return this->GetGTaccuracy(context, request, response); }));}
     void SetMessageAllocatorFor_GetGTaccuracy(
-        ::grpc::MessageAllocator< ::carla::ObjectMinimal, ::carla::DoubleValue>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::carla::ObjectMinimal, ::carla::DoubleValue>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(17);
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::carla::ObjectMinimal, ::carla::DoubleValue>*>(handler)
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(17);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::carla::ObjectMinimal, ::carla::DoubleValue>*>(handler)
               ->SetMessageAllocator(allocator);
     }
-    ~WithCallbackMethod_GetGTaccuracy() override {
+    ~ExperimentalWithCallbackMethod_GetGTaccuracy() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -1367,11 +2086,20 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetGTaccuracy(
-      ::grpc::CallbackServerContext* /*context*/, const ::carla::ObjectMinimal* /*request*/, ::carla::DoubleValue* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::carla::ObjectMinimal* /*request*/, ::carla::DoubleValue* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetGTaccuracy(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::carla::ObjectMinimal* /*request*/, ::carla::DoubleValue* /*response*/)
+    #endif
+      { return nullptr; }
   };
-  typedef WithCallbackMethod_ExecuteOneTimeStep<WithCallbackMethod_Finish<WithCallbackMethod_GetManagedActorsIds<WithCallbackMethod_GetManagedCAVsIds<WithCallbackMethod_GetManagedActorById<WithCallbackMethod_InsertVehicle<WithCallbackMethod_GetRandomSpawnPoint<WithCallbackMethod_GetActorLDM<WithCallbackMethod_InsertObject<WithCallbackMethod_InsertObjects<WithCallbackMethod_InsertCV<WithCallbackMethod_GetCartesian<WithCallbackMethod_GetGeo<WithCallbackMethod_hasLDM<WithCallbackMethod_SetControl<WithCallbackMethod_GetCarlaWaypoint<WithCallbackMethod_GetNextCarlaWaypoint<WithCallbackMethod_GetGTaccuracy<Service > > > > > > > > > > > > > > > > > > CallbackService;
-  typedef CallbackService ExperimentalCallbackService;
+  #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+  typedef ExperimentalWithCallbackMethod_ExecuteOneTimeStep<ExperimentalWithCallbackMethod_Finish<ExperimentalWithCallbackMethod_GetManagedActorsIds<ExperimentalWithCallbackMethod_GetManagedCAVsIds<ExperimentalWithCallbackMethod_GetManagedActorById<ExperimentalWithCallbackMethod_InsertVehicle<ExperimentalWithCallbackMethod_GetRandomSpawnPoint<ExperimentalWithCallbackMethod_GetActorLDM<ExperimentalWithCallbackMethod_InsertObject<ExperimentalWithCallbackMethod_InsertObjects<ExperimentalWithCallbackMethod_InsertCV<ExperimentalWithCallbackMethod_GetCartesian<ExperimentalWithCallbackMethod_GetGeo<ExperimentalWithCallbackMethod_hasLDM<ExperimentalWithCallbackMethod_SetControl<ExperimentalWithCallbackMethod_GetCarlaWaypoint<ExperimentalWithCallbackMethod_GetNextCarlaWaypoint<ExperimentalWithCallbackMethod_GetGTaccuracy<Service > > > > > > > > > > > > > > > > > > CallbackService;
+  #endif
+
+  typedef ExperimentalWithCallbackMethod_ExecuteOneTimeStep<ExperimentalWithCallbackMethod_Finish<ExperimentalWithCallbackMethod_GetManagedActorsIds<ExperimentalWithCallbackMethod_GetManagedCAVsIds<ExperimentalWithCallbackMethod_GetManagedActorById<ExperimentalWithCallbackMethod_InsertVehicle<ExperimentalWithCallbackMethod_GetRandomSpawnPoint<ExperimentalWithCallbackMethod_GetActorLDM<ExperimentalWithCallbackMethod_InsertObject<ExperimentalWithCallbackMethod_InsertObjects<ExperimentalWithCallbackMethod_InsertCV<ExperimentalWithCallbackMethod_GetCartesian<ExperimentalWithCallbackMethod_GetGeo<ExperimentalWithCallbackMethod_hasLDM<ExperimentalWithCallbackMethod_SetControl<ExperimentalWithCallbackMethod_GetCarlaWaypoint<ExperimentalWithCallbackMethod_GetNextCarlaWaypoint<ExperimentalWithCallbackMethod_GetGTaccuracy<Service > > > > > > > > > > > > > > > > > > ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_ExecuteOneTimeStep : public BaseClass {
    private:
@@ -2039,17 +2767,27 @@ class CarlaAdapter final {
     }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_ExecuteOneTimeStep : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_ExecuteOneTimeStep : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_ExecuteOneTimeStep() {
-      ::grpc::Service::MarkMethodRawCallback(0,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_ExecuteOneTimeStep() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(0,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->ExecuteOneTimeStep(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->ExecuteOneTimeStep(context, request, response); }));
     }
-    ~WithRawCallbackMethod_ExecuteOneTimeStep() override {
+    ~ExperimentalWithRawCallbackMethod_ExecuteOneTimeStep() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2057,21 +2795,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* ExecuteOneTimeStep(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* ExecuteOneTimeStep(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_Finish : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_Finish : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_Finish() {
-      ::grpc::Service::MarkMethodRawCallback(1,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_Finish() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(1,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->Finish(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->Finish(context, request, response); }));
     }
-    ~WithRawCallbackMethod_Finish() override {
+    ~ExperimentalWithRawCallbackMethod_Finish() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2079,21 +2833,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* Finish(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* Finish(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_GetManagedActorsIds : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_GetManagedActorsIds : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_GetManagedActorsIds() {
-      ::grpc::Service::MarkMethodRawCallback(2,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_GetManagedActorsIds() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(2,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetManagedActorsIds(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetManagedActorsIds(context, request, response); }));
     }
-    ~WithRawCallbackMethod_GetManagedActorsIds() override {
+    ~ExperimentalWithRawCallbackMethod_GetManagedActorsIds() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2101,21 +2871,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetManagedActorsIds(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetManagedActorsIds(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_GetManagedCAVsIds : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_GetManagedCAVsIds : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_GetManagedCAVsIds() {
-      ::grpc::Service::MarkMethodRawCallback(3,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_GetManagedCAVsIds() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(3,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetManagedCAVsIds(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetManagedCAVsIds(context, request, response); }));
     }
-    ~WithRawCallbackMethod_GetManagedCAVsIds() override {
+    ~ExperimentalWithRawCallbackMethod_GetManagedCAVsIds() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2123,21 +2909,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetManagedCAVsIds(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetManagedCAVsIds(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_GetManagedActorById : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_GetManagedActorById : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_GetManagedActorById() {
-      ::grpc::Service::MarkMethodRawCallback(4,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_GetManagedActorById() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(4,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetManagedActorById(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetManagedActorById(context, request, response); }));
     }
-    ~WithRawCallbackMethod_GetManagedActorById() override {
+    ~ExperimentalWithRawCallbackMethod_GetManagedActorById() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2145,21 +2947,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetManagedActorById(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetManagedActorById(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_InsertVehicle : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_InsertVehicle : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_InsertVehicle() {
-      ::grpc::Service::MarkMethodRawCallback(5,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_InsertVehicle() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(5,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->InsertVehicle(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->InsertVehicle(context, request, response); }));
     }
-    ~WithRawCallbackMethod_InsertVehicle() override {
+    ~ExperimentalWithRawCallbackMethod_InsertVehicle() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2167,21 +2985,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* InsertVehicle(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* InsertVehicle(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_GetRandomSpawnPoint : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_GetRandomSpawnPoint : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_GetRandomSpawnPoint() {
-      ::grpc::Service::MarkMethodRawCallback(6,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_GetRandomSpawnPoint() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(6,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetRandomSpawnPoint(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetRandomSpawnPoint(context, request, response); }));
     }
-    ~WithRawCallbackMethod_GetRandomSpawnPoint() override {
+    ~ExperimentalWithRawCallbackMethod_GetRandomSpawnPoint() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2189,21 +3023,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetRandomSpawnPoint(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetRandomSpawnPoint(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_GetActorLDM : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_GetActorLDM : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_GetActorLDM() {
-      ::grpc::Service::MarkMethodRawCallback(7,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_GetActorLDM() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(7,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetActorLDM(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetActorLDM(context, request, response); }));
     }
-    ~WithRawCallbackMethod_GetActorLDM() override {
+    ~ExperimentalWithRawCallbackMethod_GetActorLDM() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2211,21 +3061,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetActorLDM(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetActorLDM(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_InsertObject : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_InsertObject : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_InsertObject() {
-      ::grpc::Service::MarkMethodRawCallback(8,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_InsertObject() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(8,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->InsertObject(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->InsertObject(context, request, response); }));
     }
-    ~WithRawCallbackMethod_InsertObject() override {
+    ~ExperimentalWithRawCallbackMethod_InsertObject() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2233,21 +3099,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* InsertObject(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* InsertObject(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_InsertObjects : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_InsertObjects : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_InsertObjects() {
-      ::grpc::Service::MarkMethodRawCallback(9,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_InsertObjects() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(9,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->InsertObjects(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->InsertObjects(context, request, response); }));
     }
-    ~WithRawCallbackMethod_InsertObjects() override {
+    ~ExperimentalWithRawCallbackMethod_InsertObjects() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2255,21 +3137,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* InsertObjects(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* InsertObjects(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_InsertCV : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_InsertCV : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_InsertCV() {
-      ::grpc::Service::MarkMethodRawCallback(10,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_InsertCV() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(10,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->InsertCV(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->InsertCV(context, request, response); }));
     }
-    ~WithRawCallbackMethod_InsertCV() override {
+    ~ExperimentalWithRawCallbackMethod_InsertCV() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2277,21 +3175,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* InsertCV(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* InsertCV(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_GetCartesian : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_GetCartesian : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_GetCartesian() {
-      ::grpc::Service::MarkMethodRawCallback(11,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_GetCartesian() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(11,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetCartesian(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetCartesian(context, request, response); }));
     }
-    ~WithRawCallbackMethod_GetCartesian() override {
+    ~ExperimentalWithRawCallbackMethod_GetCartesian() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2299,21 +3213,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetCartesian(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetCartesian(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_GetGeo : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_GetGeo : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_GetGeo() {
-      ::grpc::Service::MarkMethodRawCallback(12,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_GetGeo() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(12,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetGeo(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetGeo(context, request, response); }));
     }
-    ~WithRawCallbackMethod_GetGeo() override {
+    ~ExperimentalWithRawCallbackMethod_GetGeo() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2321,21 +3251,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetGeo(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetGeo(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_hasLDM : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_hasLDM : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_hasLDM() {
-      ::grpc::Service::MarkMethodRawCallback(13,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_hasLDM() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(13,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->hasLDM(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->hasLDM(context, request, response); }));
     }
-    ~WithRawCallbackMethod_hasLDM() override {
+    ~ExperimentalWithRawCallbackMethod_hasLDM() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2343,21 +3289,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* hasLDM(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* hasLDM(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_SetControl : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_SetControl : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_SetControl() {
-      ::grpc::Service::MarkMethodRawCallback(14,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_SetControl() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(14,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->SetControl(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->SetControl(context, request, response); }));
     }
-    ~WithRawCallbackMethod_SetControl() override {
+    ~ExperimentalWithRawCallbackMethod_SetControl() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2365,21 +3327,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* SetControl(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetControl(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_GetCarlaWaypoint : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_GetCarlaWaypoint : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_GetCarlaWaypoint() {
-      ::grpc::Service::MarkMethodRawCallback(15,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_GetCarlaWaypoint() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(15,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetCarlaWaypoint(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetCarlaWaypoint(context, request, response); }));
     }
-    ~WithRawCallbackMethod_GetCarlaWaypoint() override {
+    ~ExperimentalWithRawCallbackMethod_GetCarlaWaypoint() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2387,21 +3365,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetCarlaWaypoint(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetCarlaWaypoint(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_GetNextCarlaWaypoint : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_GetNextCarlaWaypoint : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_GetNextCarlaWaypoint() {
-      ::grpc::Service::MarkMethodRawCallback(16,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_GetNextCarlaWaypoint() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(16,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetNextCarlaWaypoint(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetNextCarlaWaypoint(context, request, response); }));
     }
-    ~WithRawCallbackMethod_GetNextCarlaWaypoint() override {
+    ~ExperimentalWithRawCallbackMethod_GetNextCarlaWaypoint() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2409,21 +3403,37 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetNextCarlaWaypoint(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetNextCarlaWaypoint(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
-  class WithRawCallbackMethod_GetGTaccuracy : public BaseClass {
+  class ExperimentalWithRawCallbackMethod_GetGTaccuracy : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
-    WithRawCallbackMethod_GetGTaccuracy() {
-      ::grpc::Service::MarkMethodRawCallback(17,
-          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+    ExperimentalWithRawCallbackMethod_GetGTaccuracy() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(17,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
-                   ::grpc::CallbackServerContext* context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetGTaccuracy(context, request, response); }));
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->GetGTaccuracy(context, request, response); }));
     }
-    ~WithRawCallbackMethod_GetGTaccuracy() override {
+    ~ExperimentalWithRawCallbackMethod_GetGTaccuracy() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
@@ -2431,8 +3441,14 @@ class CarlaAdapter final {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* GetGTaccuracy(
-      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)  { return nullptr; }
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* GetGTaccuracy(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_ExecuteOneTimeStep : public BaseClass {
@@ -2443,8 +3459,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(0,
         new ::grpc::internal::StreamedUnaryHandler<
           ::google::protobuf::Empty, ::carla::Boolean>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::google::protobuf::Empty, ::carla::Boolean>* streamer) {
                        return this->StreamedExecuteOneTimeStep(context,
                          streamer);
@@ -2470,8 +3486,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(1,
         new ::grpc::internal::StreamedUnaryHandler<
           ::google::protobuf::Empty, ::google::protobuf::Empty>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::google::protobuf::Empty, ::google::protobuf::Empty>* streamer) {
                        return this->StreamedFinish(context,
                          streamer);
@@ -2497,8 +3513,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(2,
         new ::grpc::internal::StreamedUnaryHandler<
           ::google::protobuf::Empty, ::carla::ActorIds>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::google::protobuf::Empty, ::carla::ActorIds>* streamer) {
                        return this->StreamedGetManagedActorsIds(context,
                          streamer);
@@ -2524,8 +3540,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(3,
         new ::grpc::internal::StreamedUnaryHandler<
           ::google::protobuf::Empty, ::carla::ActorIds>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::google::protobuf::Empty, ::carla::ActorIds>* streamer) {
                        return this->StreamedGetManagedCAVsIds(context,
                          streamer);
@@ -2551,8 +3567,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(4,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::Number, ::carla::Vehicle>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::Number, ::carla::Vehicle>* streamer) {
                        return this->StreamedGetManagedActorById(context,
                          streamer);
@@ -2578,8 +3594,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(5,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::Vehicle, ::carla::Number>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::Vehicle, ::carla::Number>* streamer) {
                        return this->StreamedInsertVehicle(context,
                          streamer);
@@ -2605,8 +3621,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(6,
         new ::grpc::internal::StreamedUnaryHandler<
           ::google::protobuf::Empty, ::carla::Transform>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::google::protobuf::Empty, ::carla::Transform>* streamer) {
                        return this->StreamedGetRandomSpawnPoint(context,
                          streamer);
@@ -2632,8 +3648,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(7,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::Number, ::carla::Objects>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::Number, ::carla::Objects>* streamer) {
                        return this->StreamedGetActorLDM(context,
                          streamer);
@@ -2659,8 +3675,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(8,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::ObjectIn, ::carla::Number>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::ObjectIn, ::carla::Number>* streamer) {
                        return this->StreamedInsertObject(context,
                          streamer);
@@ -2686,8 +3702,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(9,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::ObjectsIn, ::carla::DoubleValue>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::ObjectsIn, ::carla::DoubleValue>* streamer) {
                        return this->StreamedInsertObjects(context,
                          streamer);
@@ -2713,8 +3729,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(10,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::ObjectIn, ::carla::DoubleValue>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::ObjectIn, ::carla::DoubleValue>* streamer) {
                        return this->StreamedInsertCV(context,
                          streamer);
@@ -2740,8 +3756,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(11,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::Vector, ::carla::Vector>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::Vector, ::carla::Vector>* streamer) {
                        return this->StreamedGetCartesian(context,
                          streamer);
@@ -2767,8 +3783,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(12,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::Vector, ::carla::Vector>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::Vector, ::carla::Vector>* streamer) {
                        return this->StreamedGetGeo(context,
                          streamer);
@@ -2794,8 +3810,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(13,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::Number, ::carla::Boolean>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::Number, ::carla::Boolean>* streamer) {
                        return this->StreamedhasLDM(context,
                          streamer);
@@ -2821,8 +3837,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(14,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::Control, ::google::protobuf::Empty>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::Control, ::google::protobuf::Empty>* streamer) {
                        return this->StreamedSetControl(context,
                          streamer);
@@ -2848,8 +3864,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(15,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::Vector, ::carla::Waypoint>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::Vector, ::carla::Waypoint>* streamer) {
                        return this->StreamedGetCarlaWaypoint(context,
                          streamer);
@@ -2875,8 +3891,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(16,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::Vector, ::carla::Waypoint>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::Vector, ::carla::Waypoint>* streamer) {
                        return this->StreamedGetNextCarlaWaypoint(context,
                          streamer);
@@ -2902,8 +3918,8 @@ class CarlaAdapter final {
       ::grpc::Service::MarkMethodStreamed(17,
         new ::grpc::internal::StreamedUnaryHandler<
           ::carla::ObjectMinimal, ::carla::DoubleValue>(
-            [this](::grpc::ServerContext* context,
-                   ::grpc::ServerUnaryStreamer<
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
                      ::carla::ObjectMinimal, ::carla::DoubleValue>* streamer) {
                        return this->StreamedGetGTaccuracy(context,
                          streamer);

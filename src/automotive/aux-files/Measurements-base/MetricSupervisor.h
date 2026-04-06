@@ -135,6 +135,7 @@ public:
     return sum / m_sinr_per_veh.size();
   }
   */
+
   /**
    * @brief Get the total number of packets transmitted in the whole simulation.
    * @return  The total number of packets transmitted.
@@ -264,7 +265,7 @@ public:
       }
     return sum / m_sinr_per_veh[vehicleID].size();
   }
-   */
+  */
   double getAverageLatency_vehicle(uint64_t vehicleID) {return m_avg_latency_ms_per_veh[vehicleID];}
   /**
    * @brief Get the total number of packets transmitted by a specific vehicle.
